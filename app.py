@@ -100,14 +100,15 @@ CUSTOM_CSS = """
         opacity: 0.4;
     }
 
-    button[kind="headerNoPadding"],
     [data-testid="stSidebarCollapseButton"] button,
     [data-testid="collapsedControl"] button {
-        color: #ffffff !important;
+        font-size: 0 !important;
+        color: transparent !important;
+        overflow: hidden !important;
     }
 
-    [data-testid="stSidebarCollapseButton"] button svg,
-    [data-testid="collapsedControl"] button svg {
+    [data-testid="stSidebarCollapseButton"] button *,
+    [data-testid="collapsedControl"] button * {
         display: none !important;
     }
 
@@ -115,12 +116,14 @@ CUSTOM_CSS = """
         content: "\\25C0";
         font-size: 1.2rem;
         color: #ffffff;
+        display: inline-block;
     }
 
     [data-testid="collapsedControl"] button::after {
         content: "\\25B6";
         font-size: 1.2rem;
         color: #ffffff;
+        display: inline-block;
     }
 
     .metric-card {
