@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
 from streamlit_folium import st_folium
+import streamlit.components.v1 as components
 from api_clients import (
     fetch_earthquakes, fetch_nasa_events, fetch_reliefweb_disasters,
     fetch_weather_data, fetch_historical_weather, get_all_live_events,
@@ -18,7 +19,8 @@ from disaster_data import (
     generate_country_summary, generate_disaster_analysis
 )
 from map_utils import (
-    create_global_map, create_country_map, DISASTER_COLORS, get_disaster_color
+    create_global_map, create_country_map, create_rotating_globe_html,
+    DISASTER_COLORS, get_disaster_color
 )
 
 
@@ -48,17 +50,19 @@ st.set_page_config(
 
 CUSTOM_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    * {
+        font-family: 'Courier New', Courier, monospace !important;
+    }
 
     .stApp {
         background-color: #0a0e17;
-        color: #e0e6ed;
-        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        font-family: 'Courier New', Courier, monospace;
     }
 
     section[data-testid="stSidebar"] {
-        background-color: #0d1221;
-        border-right: 1px solid #1a2332;
+        background-color: #666666;
+        border-right: 1px solid #888888;
     }
 
     section[data-testid="stSidebar"] .stMarkdown h1,
@@ -77,7 +81,7 @@ CUSTOM_CSS = """
     }
 
     .metric-card h3 {
-        color: #8899aa;
+        color: #ffffff;
         font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -118,13 +122,13 @@ CUSTOM_CSS = """
 
     .alert-card .alert-title {
         font-size: 0.95rem;
-        color: #e0e6ed;
+        color: #ffffff;
         margin: 4px 0;
     }
 
     .alert-card .alert-time {
         font-size: 0.75rem;
-        color: #667788;
+        color: #ffffff;
     }
 
     .risk-bar {
@@ -169,7 +173,7 @@ CUSTOM_CSS = """
     }
 
     .resource-card p {
-        color: #8899aa;
+        color: #ffffff;
         font-size: 0.85rem;
         margin: 2px 0;
     }
@@ -188,7 +192,7 @@ CUSTOM_CSS = """
         background-color: #141b2d;
         border: 1px solid #1e2d3d;
         border-radius: 8px 8px 0 0;
-        color: #8899aa;
+        color: #ffffff;
         padding: 8px 16px;
     }
 
@@ -204,7 +208,7 @@ CUSTOM_CSS = """
         padding: 10px 14px;
         margin: 4px 0;
         border-left: 3px solid #4fc3f7;
-        color: #c0c8d4;
+        color: #ffffff;
     }
 
     div[data-testid="stMetric"] {
@@ -215,7 +219,7 @@ CUSTOM_CSS = """
     }
 
     div[data-testid="stMetric"] label {
-        color: #8899aa;
+        color: #ffffff;
     }
 
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
@@ -225,7 +229,7 @@ CUSTOM_CSS = """
     .stSelectbox > div > div {
         background-color: #141b2d;
         border-color: #1e2d3d;
-        color: #e0e6ed;
+        color: #ffffff;
     }
 
     .stMultiSelect > div > div {
@@ -298,7 +302,7 @@ def render_risk_bar(name, score, max_score=10):
         color = "#44cc88"
     return f"""
     <div style="display:flex; align-items:center; margin:6px 0;">
-        <span style="width:160px; color:#8899aa; font-size:0.85rem;">{name}</span>
+        <span style="width:160px; color:#ffffff; font-size:0.85rem;">{name}</span>
         <div class="risk-bar" style="flex:1;">
             <div class="risk-fill" style="width:{pct}%; background:{color};"></div>
         </div>
@@ -311,7 +315,7 @@ def page_dashboard():
     st.markdown("""
     <div style="text-align:center; margin-bottom:20px;">
         <h1 style="color:#4fc3f7; font-size:2.2rem; margin-bottom:5px;">🌍 Global Disaster Resilience Monitor</h1>
-        <p style="color:#667788; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
+        <p style="color:#ffffff; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -355,8 +359,8 @@ def page_dashboard():
     legend_html += '</div>'
     st.markdown(legend_html, unsafe_allow_html=True)
 
-    disaster_map = create_global_map(events, selected_types=filter_types if filter_types else None)
-    st_folium(disaster_map, width=None, height=550, returned_objects=[])
+    globe_html = create_rotating_globe_html(events, selected_types=filter_types if filter_types else None, height=580)
+    components.html(globe_html, height=600, scrolling=False)
 
     col_left, col_right = st.columns([3, 2])
 
@@ -373,7 +377,7 @@ def page_dashboard():
             ))
             fig.update_layout(
                 plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                font_color="#8899aa", height=350,
+                font_color="#ffffff", font_family="Courier New", height=350,
                 margin=dict(l=0, r=20, t=10, b=10),
                 xaxis=dict(gridcolor="#1a2332"),
                 yaxis=dict(gridcolor="#1a2332")
@@ -493,11 +497,11 @@ def page_country_analysis():
         fig.update_layout(
             polar=dict(
                 bgcolor="#0a0e17",
-                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#1a2332", color="#667788"),
-                angularaxis=dict(gridcolor="#1a2332", color="#8899aa")
+                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#1a2332", color="#ffffff"),
+                angularaxis=dict(gridcolor="#1a2332", color="#ffffff")
             ),
             plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-            font_color="#8899aa", height=400,
+            font_color="#ffffff", font_family="Courier New", height=400,
             margin=dict(l=60, r=60, t=30, b=30),
             showlegend=False
         )
@@ -588,7 +592,7 @@ def page_country_analysis():
                 fig_temp.update_layout(
                     title="7-Day Temperature Forecast",
                     plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#8899aa", height=300,
+                    font_color="#ffffff", font_family="Courier New", height=300,
                     margin=dict(l=40, r=20, t=40, b=30),
                     xaxis=dict(gridcolor="#1a2332"),
                     yaxis=dict(gridcolor="#1a2332", title="°C"),
@@ -604,7 +608,7 @@ def page_country_analysis():
                 fig_precip.update_layout(
                     title="7-Day Precipitation Forecast",
                     plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#8899aa", height=250,
+                    font_color="#ffffff", font_family="Courier New", height=250,
                     margin=dict(l=40, r=20, t=40, b=30),
                     xaxis=dict(gridcolor="#1a2332"),
                     yaxis=dict(gridcolor="#1a2332", title="mm")
@@ -645,7 +649,7 @@ def page_country_analysis():
 
 def page_live_alerts():
     st.markdown('<h1 style="color:#4fc3f7;">🚨 Live Disaster Alerts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#667788;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#ffffff;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
 
     with st.spinner("Fetching live data..."):
         events = get_all_live_events()
@@ -711,7 +715,7 @@ def page_live_alerts():
 
 def page_drought_heatwave():
     st.markdown('<h1 style="color:#4fc3f7;">🌡️ Drought & Heatwave Center</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#667788;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#ffffff;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
 
     tab_monitor, tab_help, tab_crops, tab_water = st.tabs(["🌡️ Heat Monitor", "💧 Drought Help", "🌾 Crop Advice", "🏗️ Water Harvesting"])
 
@@ -776,7 +780,7 @@ def page_drought_heatwave():
                 fig.update_layout(
                     title=f"7-Day Temperature Forecast — {monitor_country}",
                     plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#8899aa", height=350,
+                    font_color="#ffffff", font_family="Courier New", height=350,
                     xaxis=dict(gridcolor="#1a2332"), yaxis=dict(gridcolor="#1a2332", title="°C"),
                     legend=dict(bgcolor="rgba(0,0,0,0)"),
                     margin=dict(l=40, r=20, t=40, b=30)
@@ -872,7 +876,7 @@ def page_drought_heatwave():
 
 def page_resources():
     st.markdown('<h1 style="color:#4fc3f7;">🆘 Resource Hub</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#667788;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#ffffff;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
 
     tab_orgs, tab_shelters, tab_evac, tab_prep, tab_community, tab_report = st.tabs(["🏥 Aid Organizations", "🏠 Shelter & Water Locator", "🚨 Evacuation Guides", "🎒 Preparedness", "👥 Community", "📝 Report Disaster"])
 
@@ -1054,7 +1058,7 @@ def page_resources():
                     <div class="alert-type" style="color:#4fc3f7;">📝 {_safe(report.get('type', ''))} — {_safe(report.get('severity', ''))}</div>
                     <div class="alert-title">{_safe(report.get('location', ''))}, {_safe(report.get('country', ''))}</div>
                     <div class="alert-time">{_safe(report.get('date', ''))} | Submitted: {_safe(report.get('submitted_at', ''))}</div>
-                    <div style="color:#8899aa;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
+                    <div style="color:#ffffff;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1063,7 +1067,7 @@ with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding:15px 0;">
         <h1 style="color:#4fc3f7; font-size:1.4rem; margin:0;">🌍 DisasterWatch</h1>
-        <p style="color:#667788; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
+        <p style="color:#ffffff; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
     </div>
     <hr style="border-color:#1a2332; margin:10px 0;">
     """, unsafe_allow_html=True)
@@ -1086,7 +1090,7 @@ with st.sidebar:
         volc_count = sum(1 for e in quick_events if e.get("type") == "Volcanic Eruption")
 
         st.markdown(f"""
-        <div style="font-size:0.85rem; color:#8899aa;">
+        <div style="font-size:0.85rem; color:#ffffff;">
             <p>🔴 Earthquakes: <b style="color:#ff4444;">{eq_count}</b></p>
             <p>🌀 Storms: <b style="color:#4488ff;">{storm_count}</b></p>
             <p>🔥 Wildfires: <b style="color:#ff8800;">{fire_count}</b></p>
@@ -1095,11 +1099,11 @@ with st.sidebar:
         </div>
         """, unsafe_allow_html=True)
     except Exception:
-        st.markdown('<p style="color:#667788;">Loading stats...</p>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#ffffff;">Loading stats...</p>', unsafe_allow_html=True)
 
     st.markdown("<hr style='border-color:#1a2332;'>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div style="font-size:0.75rem; color:#445566; text-align:center;">
+    <div style="font-size:0.75rem; color:#ffffff; text-align:center;">
         <p>Data Sources: USGS, NASA EONET, GDACS, ReliefWeb, Open-Meteo</p>
         <p>Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
     </div>
