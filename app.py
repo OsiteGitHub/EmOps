@@ -22,6 +22,12 @@ from map_utils import (
     create_global_map, create_country_map, create_rotating_globe_html,
     DISASTER_COLORS, get_disaster_color
 )
+from disaster_reports import (
+    HISTORICAL_DISASTERS, RESEARCH_ARTICLES,
+    get_country_disasters, get_country_research,
+    get_disasters_by_type, get_research_by_type,
+    get_tropical_disasters
+)
 
 
 def _safe(text):
@@ -61,14 +67,50 @@ CUSTOM_CSS = """
     }
 
     section[data-testid="stSidebar"] {
-        background-color: #666666;
-        border-right: 1px solid #888888;
+        background-color: #3b3b3b;
+        border-right: 1px solid #555555;
     }
 
     section[data-testid="stSidebar"] .stMarkdown h1,
     section[data-testid="stSidebar"] .stMarkdown h2,
-    section[data-testid="stSidebar"] .stMarkdown h3 {
-        color: #4fc3f7;
+    section[data-testid="stSidebar"] .stMarkdown h3,
+    section[data-testid="stSidebar"] .stMarkdown h4 {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    section[data-testid="stSidebar"] .stRadio label,
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+        color: #ffffff !important;
+        font-weight: 500;
+    }
+
+    section[data-testid="stSidebar"] hr {
+        border-color: #ffffff !important;
+        opacity: 0.4;
+    }
+
+    button[kind="headerNoPadding"],
+    [data-testid="stSidebarCollapseButton"] button,
+    [data-testid="collapsedControl"] button {
+        color: #ffffff !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button svg,
+    [data-testid="collapsedControl"] button svg {
+        display: none !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button::after {
+        content: "\\25C0";
+        font-size: 1.2rem;
+        color: #ffffff;
+    }
+
+    [data-testid="collapsedControl"] button::after {
+        content: "\\25B6";
+        font-size: 1.2rem;
+        color: #ffffff;
     }
 
     .metric-card {
@@ -321,7 +363,7 @@ def page_dashboard():
 
     with st.spinner("Loading live disaster data..."):
         events = get_all_live_events()
-        reliefweb = fetch_reliefweb_disasters(30)
+        reliefweb = fetch_reliefweb_disasters(50)
 
     type_counts = {}
     severity_counts = {"Critical": 0, "High": 0, "Moderate": 0, "Low": 0}
@@ -408,6 +450,73 @@ def page_dashboard():
                     <p>📍 {countries_str}</p>
                     <p>⚠️ {types_str}</p>
                     <p>📅 {disaster.get('date', '')[:10]}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+    st.markdown('<div class="section-header"><h2>🌍 Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
+
+    dr_tab1, dr_tab2, dr_tab3 = st.tabs(["📰 News & Situation Reports", "📚 Research Publications", "🌴 Tropical Focus"])
+
+    with dr_tab1:
+        dr_filter = st.selectbox("Filter by disaster type", ["All Types", "Flood", "Extreme Temperature", "Landslide", "Tropical Cyclone", "Wildfire", "Drought", "Earthquake", "Coastal Pollution", "Volcanic Eruption", "Storm"], key="dash_dr_filter")
+        if dr_filter == "All Types":
+            display_disasters = sorted(HISTORICAL_DISASTERS, key=lambda x: x.get("date", ""), reverse=True)
+        else:
+            display_disasters = get_disasters_by_type(dr_filter, limit=100)
+        st.markdown(f"**Showing {len(display_disasters)} situation reports**")
+        dr_cols = st.columns(3)
+        for idx, d in enumerate(display_disasters[:30]):
+            with dr_cols[idx % 3]:
+                sev = d.get("severity", "Moderate")
+                sev_class = {"Critical": "alert-critical", "High": "alert-high", "Moderate": "alert-moderate", "Low": "alert-low"}.get(sev, "alert-moderate")
+                casualties_str = f" | ☠️ {d['casualties']:,}" if d.get("casualties") else ""
+                displaced_str = f" | 👥 {d['displaced']:,} displaced" if d.get("displaced") else ""
+                st.markdown(f"""
+                <div class="alert-card {sev_class}">
+                    <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
+                    <div class="alert-title">{_safe(d.get('title', ''))}</div>
+                    <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
+                    <div style="color:#ffffff;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+    with dr_tab2:
+        ra_filter = st.selectbox("Filter by disaster type", ["All Types", "Flood", "Extreme Temperature", "Landslide", "Storm", "Wildfire", "Drought", "Earthquake", "Coastal Pollution", "Volcanic Eruption"], key="dash_ra_filter")
+        if ra_filter == "All Types":
+            display_research = sorted(RESEARCH_ARTICLES, key=lambda x: x.get("year", 0), reverse=True)
+        else:
+            display_research = get_research_by_type(ra_filter, limit=50)
+        st.markdown(f"**Showing {len(display_research)} research publications**")
+        for r in display_research:
+            countries_str = ", ".join(r.get("countries", [])[:5])
+            types_str = ", ".join(r.get("types", [])[:3])
+            st.markdown(f"""
+            <div class="resource-card">
+                <h4>📄 {_safe(r.get('title', ''))}</h4>
+                <p style="color:#4fc3f7;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
+                <p>📍 {_safe(countries_str)} | ⚠️ {_safe(types_str)}</p>
+                <p style="font-size:0.82rem;line-height:1.4;">{_safe(r.get('summary', ''))}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with dr_tab3:
+        tropical_disasters = get_tropical_disasters(limit=50)
+        st.markdown(f"**{len(tropical_disasters)} disaster reports from tropical nations** — floods, heatwaves, landslides, coastal events, and more")
+        tr_cols = st.columns(3)
+        for idx, d in enumerate(tropical_disasters[:30]):
+            with tr_cols[idx % 3]:
+                sev = d.get("severity", "Moderate")
+                sev_class = {"Critical": "alert-critical", "High": "alert-high", "Moderate": "alert-moderate", "Low": "alert-low"}.get(sev, "alert-moderate")
+                casualties_str = f" | ☠️ {d['casualties']:,}" if d.get("casualties") else ""
+                displaced_str = f" | 👥 {d['displaced']:,} displaced" if d.get("displaced") else ""
+                st.markdown(f"""
+                <div class="alert-card {sev_class}">
+                    <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
+                    <div class="alert-title">{_safe(d.get('title', ''))}</div>
+                    <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
+                    <div style="color:#ffffff;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -518,18 +627,54 @@ def page_country_analysis():
 
         st.markdown('<div class="section-header"><h2>Historical Context</h2></div>', unsafe_allow_html=True)
         reliefweb = fetch_reliefweb_disasters(50)
-        country_disasters = [d for d in reliefweb if country in d.get("countries", [])]
-        if country_disasters:
-            st.markdown(f"**Recent disaster reports involving {country}:**")
-            for d in country_disasters[:5]:
+        country_disasters_rw = [d for d in reliefweb if country in d.get("countries", [])]
+        if country_disasters_rw:
+            st.markdown(f"**Recent ReliefWeb reports involving {country}:**")
+            for d in country_disasters_rw[:5]:
                 st.markdown(f"""
                 <div class="alert-card alert-moderate">
-                    <div class="alert-title">{d.get('name', '')}</div>
-                    <div class="alert-time">{', '.join(d.get('types', []))} — {d.get('date', '')[:10]}</div>
+                    <div class="alert-title">{_safe(d.get('name', ''))}</div>
+                    <div class="alert-time">{_safe(', '.join(d.get('types', [])))} — {_safe(d.get('date', '')[:10])}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        st.markdown(f'<div class="section-header"><h2>📰 Disaster History — {_safe(country)}</h2></div>', unsafe_allow_html=True)
+        country_hist = get_country_disasters(country, limit=20)
+        if country_hist:
+            st.markdown(f"**{len(country_hist)} historical disaster situation reports for {country}:**")
+            for d in country_hist:
+                sev = d.get("severity", "Moderate")
+                sev_class = {"Critical": "alert-critical", "High": "alert-high", "Moderate": "alert-moderate", "Low": "alert-low"}.get(sev, "alert-moderate")
+                casualties_str = f" | Casualties: {d['casualties']:,}" if d.get("casualties") else ""
+                displaced_str = f" | Displaced: {d['displaced']:,}" if d.get("displaced") else ""
+                st.markdown(f"""
+                <div class="alert-card {sev_class}">
+                    <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
+                    <div class="alert-title">{_safe(d.get('title', ''))}</div>
+                    <div class="alert-time">📅 {_safe(d.get('date', ''))}{casualties_str}{displaced_str}</div>
+                    <div style="color:#ffffff;margin-top:5px;font-size:0.82rem;line-height:1.4;">{_safe(d.get('description', ''))}</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.info(f"No recent ReliefWeb disaster reports found for {country}.")
+            st.info(f"No historical disaster situation reports available for {country}.")
+
+        st.markdown(f'<div class="section-header"><h2>📚 Research Publications — {_safe(country)}</h2></div>', unsafe_allow_html=True)
+        country_research = get_country_research(country, limit=10)
+        if country_research:
+            st.markdown(f"**{len(country_research)} academic publications referencing {country}:**")
+            for r in country_research:
+                types_str = ", ".join(r.get("types", [])[:3])
+                st.markdown(f"""
+                <div class="resource-card">
+                    <h4>📄 {_safe(r.get('title', ''))}</h4>
+                    <p style="color:#4fc3f7;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
+                    <p>⚠️ {_safe(types_str)}</p>
+                    <p style="font-size:0.82rem;line-height:1.4;">{_safe(r.get('summary', ''))}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info(f"No research publications found referencing {country}.")
 
     with tab4:
         st.markdown(f'<div class="section-header"><h2>Current Weather & Forecast — {_safe(location_label)}</h2></div>', unsafe_allow_html=True)
@@ -1069,7 +1214,7 @@ with st.sidebar:
         <h1 style="color:#4fc3f7; font-size:1.4rem; margin:0;">🌍 DisasterWatch</h1>
         <p style="color:#ffffff; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
     </div>
-    <hr style="border-color:#1a2332; margin:10px 0;">
+    <hr style="border-color:rgba(255,255,255,0.4); margin:10px 0;">
     """, unsafe_allow_html=True)
 
     page = st.radio(
@@ -1078,7 +1223,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
-    st.markdown("<hr style='border-color:#1a2332;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(255,255,255,0.4);'>", unsafe_allow_html=True)
 
     st.markdown("#### Quick Stats")
     try:
@@ -1088,20 +1233,24 @@ with st.sidebar:
         fire_count = sum(1 for e in quick_events if e.get("type") == "Wildfire")
         flood_count = sum(1 for e in quick_events if e.get("type") == "Flood")
         volc_count = sum(1 for e in quick_events if e.get("type") == "Volcanic Eruption")
+        landslide_count = sum(1 for e in quick_events if e.get("type") == "Landslide")
+        drought_count = sum(1 for e in quick_events if e.get("type") == "Drought")
 
         st.markdown(f"""
-        <div style="font-size:0.85rem; color:#ffffff;">
+        <div style="font-size:0.9rem; color:#ffffff; font-weight:600;">
             <p>🔴 Earthquakes: <b style="color:#ff4444;">{eq_count}</b></p>
             <p>🌀 Storms: <b style="color:#4488ff;">{storm_count}</b></p>
             <p>🔥 Wildfires: <b style="color:#ff8800;">{fire_count}</b></p>
             <p>🌊 Floods: <b style="color:#0066cc;">{flood_count}</b></p>
             <p>🌋 Volcanoes: <b style="color:#ff6600;">{volc_count}</b></p>
+            <p>🏔️ Landslides: <b style="color:#996633;">{landslide_count}</b></p>
+            <p>☀️ Droughts: <b style="color:#cc8800;">{drought_count}</b></p>
         </div>
         """, unsafe_allow_html=True)
     except Exception:
-        st.markdown('<p style="color:#ffffff;">Loading stats...</p>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#ffffff; font-weight:600;">Loading stats...</p>', unsafe_allow_html=True)
 
-    st.markdown("<hr style='border-color:#1a2332;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(255,255,255,0.4);'>", unsafe_allow_html=True)
     st.markdown(f"""
     <div style="font-size:0.75rem; color:#ffffff; text-align:center;">
         <p>Data Sources: USGS, NASA EONET, GDACS, ReliefWeb, Open-Meteo</p>

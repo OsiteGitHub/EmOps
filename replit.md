@@ -14,11 +14,12 @@ A comprehensive disaster management and resilience web application built with St
 - `app.py` — Main Streamlit application with all page rendering (Dashboard, Country Analysis, Live Alerts, Drought & Heatwave, Resource Hub)
 - `api_clients.py` — API integration layer with caching (USGS earthquakes, NASA events, GDACS, ReliefWeb disasters, Open-Meteo weather)
 - `disaster_data.py` — Country risk profiles (70+ countries), state-level coordinates (15 countries), evacuation guides, drought resources, aid organizations, shelter/water locators
-- `map_utils.py` — Map utilities: rotating 3D Plotly globe with clickable markers (global dashboard), Folium country maps, color coding, heat overlays
+- `disaster_reports.py` — Historical disaster database (102 situation reports, 44 research articles) with helper functions for country/type/tropical filtering
+- `map_utils.py` — Map utilities: rotating 3D Plotly globe with clickable markers (global dashboard), Folium country maps, color coding, heat overlays; scroll-wheel zoom with country labels at ≥1.6x and city labels at ≥2.5x
 - `.streamlit/config.toml` — Streamlit server configuration
 
 ## Key Features
-1. **Global Dashboard** — Rotating 3D globe with live disaster markers (clickable with context-aware popups: filtered → event details, all → area summary), event distribution charts, latest alerts feed, ReliefWeb reports
+1. **Global Dashboard** — Rotating 3D globe with live disaster markers (clickable with context-aware popups: filtered → event details, all → area summary), event distribution charts, latest alerts feed, ReliefWeb reports, Global Disaster History section with 3 tabs (News/Situation Reports, Research Publications, Tropical Focus) from disaster_reports.py
 2. **Country Analysis** — Per-country and per-state risk profiles, radar charts, weather forecasts with 7-day outlook, AI-generated resilience summaries, travel safety guides with evacuation protocols
 3. **Live Alerts** — Real-time earthquake/event feed with severity filtering, magnitude breakdowns, and comprehensive event tables
 4. **Drought & Heatwave Center** — Temperature monitoring with 40°C/35°C alert thresholds, drought risk indices, dry spell detection, drought-resistant crop recommendations, community rainwater harvesting techniques

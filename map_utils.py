@@ -285,7 +285,7 @@ body{{background:#0a0e17;font-family:'Courier New',Courier,monospace}}
 .close-btn{{position:absolute;top:8px;right:12px;cursor:pointer;color:#4fc3f7;font-size:18px;font-weight:bold}}
 .close-btn:hover{{color:#ff4444}}
 #rotation-status{{
-  position:absolute;bottom:12px;left:12px;color:rgba(255,255,255,0.6);
+  position:absolute;bottom:12px;left:12px;color:#ffffff;
   font-size:11px;font-family:'Courier New',monospace;cursor:pointer;
   padding:4px 10px;background:rgba(20,27,45,0.7);border-radius:6px;
   border:1px solid rgba(79,195,247,0.3);user-select:none;
@@ -305,6 +305,16 @@ body{{background:#0a0e17;font-family:'Courier New',Courier,monospace}}
 var lats={lats_js},lons={lons_js},colors={colors_js};
 var sizesI={si_js},sizesH={sh_js};
 var popupData={popups_js},hoverTexts={hovers_js};
+var countryLabels={{
+  lat:[39.8,-14.2,61.5,35.9,20.6,-25.3,56.1,23.6,-38.4,9.1,26.8,-30.6,36.2,-0.8,51.2,46.2,55.4,41.9,40.5,39.0,32.4,23.9,30.4,4.6,-9.2,-35.7,-0.02,9.2,-4.0,15.9,12.9,14.1,4.2,23.7,21.9,28.4,7.9,18.1,15.2,8.5,12.9,13.5,1.4,33.9,3.9,6.4,-1.3,5.2,9.9,5.0,7.6,12.6,0.2,14.6,17.2,-20.3,25.3,-6.3],
+  lon:[-98.6,-51.9,105.3,104.2,79.0,133.8,-106.4,-102.6,-63.6,7.5,30.8,22.9,138.3,113.9,10.5,2.2,-3.4,12.6,-3.7,35.2,53.7,45.1,69.3,-74.3,-75.0,-71.5,37.9,40.5,21.8,100.5,121.8,108.3,102.0,90.4,96.0,84.1,80.8,-77.3,-86.2,-80.8,-85.2,144.8,103.8,67.7,11.9,2.4,36.8,46.2,-84.0,-120.0,81.0,42.6,32.3,-121.0,-88.8,57.6,51.2,143.96],
+  text:['United States','Brazil','Russia','China','India','Australia','Canada','Mexico','Argentina','Nigeria','Egypt','South Africa','Japan','Indonesia','Germany','France','UK','Italy','Spain','Turkey','Iran','Saudi Arabia','Pakistan','Colombia','Peru','Chile','Kenya','Ethiopia','DR Congo','Thailand','Philippines','Vietnam','Malaysia','Bangladesh','Myanmar','Nepal','Sri Lanka','Jamaica','Honduras','Panama','Nicaragua','Guam','Singapore','Afghanistan','Cameroon','Ivory Coast','Tanzania','Somalia','Costa Rica','Liberia','Sierra Leone','Yemen','Uganda','Eritrea','Belize','Mauritius','Bahrain','Papua New Guinea']
+}};
+var cityLabels={{
+  lat:[40.7,34.1,41.9,51.5,48.9,55.8,35.7,39.9,31.2,19.1,28.6,-23.5,-33.9,30.0,6.5,-1.3,-33.9,25.2,41.0,13.8,-6.2,14.6,37.6,19.4,-12.0,-34.6,43.7,4.7,35.7,24.9,24.7,23.8,3.1,22.3,1.4,10.8,7.4,21.0,9.1,23.1,34.7,13.1,31.6,33.6,52.5,-22.9,-37.8,15.4,16.9,5.6,12.1,12.6,11.6,9.0,25.0,17.4,16.5,-4.3,10.5,0.3,6.9],
+  lon:[-74.0,-118.2,-87.6,-0.1,2.3,37.6,139.7,116.4,121.5,72.9,77.2,-46.6,151.2,31.2,3.4,36.8,18.4,55.3,29.0,100.5,106.8,121.0,127.0,-99.1,-77.0,-58.4,-79.4,-74.1,51.4,67.0,46.7,90.4,101.7,114.2,103.8,106.6,3.9,105.8,7.5,113.3,135.5,80.2,65.0,73.0,13.4,-43.2,144.9,47.1,-99.8,-0.2,77.0,38.0,104.9,38.7,121.5,78.5,-3.0,15.3,-67.0,32.6,79.9],
+  text:['New York','Los Angeles','Chicago','London','Paris','Moscow','Tokyo','Beijing','Shanghai','Mumbai','Delhi','Sao Paulo','Sydney','Cairo','Lagos','Nairobi','Cape Town','Dubai','Istanbul','Bangkok','Jakarta','Manila','Seoul','Mexico City','Lima','Buenos Aires','Toronto','Bogota','Tehran','Karachi','Riyadh','Dhaka','Kuala Lumpur','Hong Kong','Singapore','Ho Chi Minh','Abidjan','Hanoi','Kano','Guangzhou','Osaka','Chennai','Lahore','Hyderabad','Berlin','Rio de Janeiro','Melbourne','Aden','Guadalajara','Accra','Bangalore','Addis Ababa','Phnom Penh','Djibouti','Taipei','Colombo','Bamako','Lubumbashi','Caracas','Kampala','Colombo']
+}};
 var haloTrace={{
   type:'scattergeo',lat:lats,lon:lons,mode:'markers',
   marker:{{size:sizesH,color:colors,opacity:0.15,line:{{width:0}}}},
@@ -319,9 +329,22 @@ var mainTrace={{
     font:{{family:'Courier New',color:'#ffffff',size:12}}}},
   showlegend:false
 }};
+var countryTrace={{
+  type:'scattergeo',lat:countryLabels.lat,lon:countryLabels.lon,
+  mode:'text',text:countryLabels.text,
+  textfont:{{family:'Courier New',size:9,color:'rgba(255,255,255,0.85)',weight:'bold'}},
+  hoverinfo:'skip',showlegend:false,visible:false
+}};
+var cityTrace={{
+  type:'scattergeo',lat:cityLabels.lat,lon:cityLabels.lon,
+  mode:'text',text:cityLabels.text,
+  textfont:{{family:'Courier New',size:7,color:'rgba(180,220,255,0.7)'}},
+  textposition:'top center',
+  hoverinfo:'skip',showlegend:false,visible:false
+}};
 var layout={{
   geo:{{
-    projection:{{type:'orthographic',rotation:{{lon:0,lat:20,roll:0}}}},
+    projection:{{type:'orthographic',rotation:{{lon:0,lat:20,roll:0}},scale:1}},
     showland:true,landcolor:'#1a2332',
     showocean:true,oceancolor:'#0a0e17',
     showlakes:true,lakecolor:'#0d1221',
@@ -335,8 +358,8 @@ var layout={{
   margin:{{l:0,r:0,t:0,b:0}},height:{height},
   font:{{family:'Courier New',color:'#ffffff'}}
 }};
-Plotly.newPlot('globe',[haloTrace,mainTrace],layout,{{responsive:true,displayModeBar:false}});
-var rotating=true,angle=0,userInteracting=false;
+Plotly.newPlot('globe',[haloTrace,mainTrace,countryTrace,cityTrace],layout,{{responsive:true,displayModeBar:false,scrollZoom:true}});
+var rotating=true,angle=0,userInteracting=false,currentScale=1;
 function rotate(){{
   if(rotating&&!userInteracting){{
     angle=(angle+0.3)%360;
@@ -353,6 +376,18 @@ g.addEventListener('mouseup',function(){{
 }});
 g.addEventListener('touchstart',function(){{userInteracting=true}});
 g.addEventListener('touchend',function(){{userInteracting=false}});
+g.addEventListener('wheel',function(evt){{
+  evt.preventDefault();
+  var delta=evt.deltaY>0?-0.15:0.15;
+  currentScale=Math.max(0.8,Math.min(6,currentScale+delta));
+  var showLabels=currentScale>=1.6;
+  var showCities=currentScale>=2.5;
+  Plotly.update('globe',{{}},{{
+    'geo.projection.scale':currentScale
+  }});
+  Plotly.restyle('globe',{{visible:showLabels}},2);
+  Plotly.restyle('globe',{{visible:showCities}},3);
+}},{{passive:false}});
 function toggleRotation(){{
   rotating=!rotating;
   document.getElementById('rotation-status').innerHTML=rotating?'&#10227; Rotating':'&#9208; Paused';
