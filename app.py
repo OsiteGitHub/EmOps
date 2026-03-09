@@ -107,6 +107,11 @@ CUSTOM_CSS = """
         overflow: hidden !important;
         text-indent: -9999px !important;
         line-height: 0 !important;
+        width: 2rem !important;
+        height: 2rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     [data-testid="stSidebarCollapseButton"] button *,
@@ -132,7 +137,7 @@ CUSTOM_CSS = """
         line-height: normal !important;
     }
 
-    button[kind="headerNoPadding"] {
+    [data-testid="stMainMenu"] button {
         font-size: 0 !important;
         color: transparent !important;
         overflow: hidden !important;
@@ -140,11 +145,11 @@ CUSTOM_CSS = """
         line-height: 0 !important;
     }
 
-    button[kind="headerNoPadding"] * {
+    [data-testid="stMainMenu"] button * {
         display: none !important;
     }
 
-    button[kind="headerNoPadding"]::after {
+    [data-testid="stMainMenu"] button::after {
         content: "\\22EE";
         font-size: 1.4rem;
         color: #ffffff;
