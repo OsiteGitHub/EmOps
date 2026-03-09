@@ -80,7 +80,17 @@ CUSTOM_CSS = """
     }
 
     section[data-testid="stSidebar"] .stRadio label,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label,
+    section[data-testid="stSidebar"] .stRadio label p,
+    section[data-testid="stSidebar"] .stRadio label span,
+    section[data-testid="stSidebar"] .stRadio label div,
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p,
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label span,
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div,
+    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label {
         color: #ffffff !important;
         font-weight: 500;
     }
