@@ -101,14 +101,18 @@ CUSTOM_CSS = """
     }
 
     [data-testid="stSidebarCollapseButton"] button,
-    [data-testid="collapsedControl"] button {
+    [data-testid="collapsedControl"] button,
+    button[kind="headerNoPadding"] {
         font-size: 0 !important;
         color: transparent !important;
         overflow: hidden !important;
+        text-indent: -9999px !important;
+        line-height: 0 !important;
     }
 
     [data-testid="stSidebarCollapseButton"] button *,
-    [data-testid="collapsedControl"] button * {
+    [data-testid="collapsedControl"] button *,
+    button[kind="headerNoPadding"] * {
         display: none !important;
     }
 
@@ -116,14 +120,19 @@ CUSTOM_CSS = """
         content: "\\25C0";
         font-size: 1.2rem;
         color: #ffffff;
-        display: inline-block;
+        display: block;
+        text-indent: 0 !important;
+        line-height: normal !important;
     }
 
-    [data-testid="collapsedControl"] button::after {
+    [data-testid="collapsedControl"] button::after,
+    button[kind="headerNoPadding"]::after {
         content: "\\25B6";
         font-size: 1.2rem;
         color: #ffffff;
-        display: inline-block;
+        display: block;
+        text-indent: 0 !important;
+        line-height: normal !important;
     }
 
     .metric-card {
