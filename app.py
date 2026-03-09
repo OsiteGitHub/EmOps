@@ -127,8 +127,8 @@ CUSTOM_CSS = """
 
     [data-testid="collapsedControl"] button::after,
     button[kind="headerNoPadding"]::after {
-        content: "\\25B6";
-        font-size: 1.2rem;
+        content: "\\22EE";
+        font-size: 1.4rem;
         color: #ffffff;
         display: block;
         text-indent: 0 !important;
