@@ -61,21 +61,21 @@ CUSTOM_CSS = """
     }
 
     .stApp {
-        background-color: #0a0e17;
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #111111;
         font-family: 'Courier New', Courier, monospace;
     }
 
     section[data-testid="stSidebar"] {
-        background-color: #3b3b3b;
-        border-right: 1px solid #555555;
+        background-color: #f0f0f0;
+        border-right: 1px solid #cccccc;
     }
 
     section[data-testid="stSidebar"] .stMarkdown h1,
     section[data-testid="stSidebar"] .stMarkdown h2,
     section[data-testid="stSidebar"] .stMarkdown h3,
     section[data-testid="stSidebar"] .stMarkdown h4 {
-        color: #ffffff;
+        color: #111111;
         font-weight: 700;
     }
 
@@ -91,13 +91,13 @@ CUSTOM_CSS = """
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] label {
-        color: #ffffff !important;
+        color: #111111 !important;
         font-weight: 500;
     }
 
     section[data-testid="stSidebar"] hr {
-        border-color: #ffffff !important;
-        opacity: 0.4;
+        border-color: #bbbbbb !important;
+        opacity: 0.8;
     }
 
     [data-testid="stSidebarCollapseButton"] button,
@@ -122,7 +122,7 @@ CUSTOM_CSS = """
     [data-testid="stSidebarCollapseButton"] button::after {
         content: "\\25C0";
         font-size: 1.2rem;
-        color: #ffffff;
+        color: #111111;
         display: block;
         text-indent: 0 !important;
         line-height: normal !important;
@@ -131,7 +131,7 @@ CUSTOM_CSS = """
     [data-testid="collapsedControl"] button::after {
         content: "\\25B6";
         font-size: 1.2rem;
-        color: #ffffff;
+        color: #111111;
         display: block;
         text-indent: 0 !important;
         line-height: normal !important;
@@ -152,15 +152,15 @@ CUSTOM_CSS = """
     [data-testid="stMainMenu"] button::after {
         content: "\\22EE";
         font-size: 1.4rem;
-        color: #ffffff;
+        color: #111111;
         display: block;
         text-indent: 0 !important;
         line-height: normal !important;
     }
 
     .metric-card {
-        background: linear-gradient(135deg, #141b2d 0%, #1a2332 100%);
-        border: 1px solid #1e2d3d;
+        background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+        border: 1px solid #c8d8f0;
         border-radius: 12px;
         padding: 20px;
         text-align: center;
@@ -168,7 +168,7 @@ CUSTOM_CSS = """
     }
 
     .metric-card h3 {
-        color: #ffffff;
+        color: #333333;
         font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -181,24 +181,24 @@ CUSTOM_CSS = """
         margin: 5px 0;
     }
 
-    .metric-card .value.red { color: #ff4444; }
-    .metric-card .value.orange { color: #ff8800; }
-    .metric-card .value.blue { color: #4488ff; }
-    .metric-card .value.green { color: #44cc88; }
-    .metric-card .value.yellow { color: #ffcc00; }
+    .metric-card .value.red { color: #cc2222; }
+    .metric-card .value.orange { color: #cc6600; }
+    .metric-card .value.blue { color: #1a66cc; }
+    .metric-card .value.green { color: #228855; }
+    .metric-card .value.yellow { color: #aa8800; }
 
     .alert-card {
-        background: #141b2d;
+        background: #f8f9fa;
         border-left: 4px solid;
         border-radius: 0 8px 8px 0;
         padding: 12px 16px;
         margin-bottom: 8px;
     }
 
-    .alert-critical { border-color: #ff4444; }
-    .alert-high { border-color: #ff8800; }
-    .alert-moderate { border-color: #ffcc00; }
-    .alert-low { border-color: #44cc88; }
+    .alert-critical { border-color: #cc2222; }
+    .alert-high { border-color: #cc6600; }
+    .alert-moderate { border-color: #aa8800; }
+    .alert-low { border-color: #228855; }
 
     .alert-card .alert-type {
         font-size: 0.75rem;
@@ -209,17 +209,17 @@ CUSTOM_CSS = """
 
     .alert-card .alert-title {
         font-size: 0.95rem;
-        color: #ffffff;
+        color: #111111;
         margin: 4px 0;
     }
 
     .alert-card .alert-time {
         font-size: 0.75rem;
-        color: #ffffff;
+        color: #333333;
     }
 
     .risk-bar {
-        background: #1a2332;
+        background: #dddddd;
         border-radius: 6px;
         height: 12px;
         overflow: hidden;
@@ -233,41 +233,41 @@ CUSTOM_CSS = """
     }
 
     .section-header {
-        background: linear-gradient(90deg, #141b2d, transparent);
-        border-left: 3px solid #4fc3f7;
+        background: linear-gradient(90deg, #e8f0fe, transparent);
+        border-left: 3px solid #1a66cc;
         padding: 10px 16px;
         margin: 20px 0 15px 0;
         border-radius: 0 8px 8px 0;
     }
 
     .section-header h2 {
-        color: #4fc3f7;
+        color: #1a66cc;
         margin: 0;
         font-size: 1.2rem;
     }
 
     .resource-card {
-        background: #141b2d;
-        border: 1px solid #1e2d3d;
+        background: #f8f9fa;
+        border: 1px solid #dddddd;
         border-radius: 10px;
         padding: 16px;
         margin-bottom: 10px;
     }
 
     .resource-card h4 {
-        color: #4fc3f7;
+        color: #1a66cc;
         margin: 0 0 8px 0;
     }
 
     .resource-card p {
-        color: #ffffff;
+        color: #111111;
         font-size: 0.85rem;
         margin: 2px 0;
     }
 
     div[data-testid="stExpander"] {
-        background-color: #141b2d;
-        border: 1px solid #1e2d3d;
+        background-color: #f8f9fa;
+        border: 1px solid #dddddd;
         border-radius: 10px;
     }
 
@@ -276,56 +276,56 @@ CUSTOM_CSS = """
     }
 
     .stTabs [data-baseweb="tab"] {
-        background-color: #141b2d;
-        border: 1px solid #1e2d3d;
+        background-color: #f0f0f0;
+        border: 1px solid #cccccc;
         border-radius: 8px 8px 0 0;
-        color: #ffffff;
+        color: #333333;
         padding: 8px 16px;
     }
 
     .stTabs [aria-selected="true"] {
-        background-color: #1a2332;
-        color: #4fc3f7;
-        border-color: #4fc3f7;
+        background-color: #e8f0fe;
+        color: #1a66cc;
+        border-color: #1a66cc;
     }
 
     .evac-step {
-        background: #141b2d;
+        background: #f0f4ff;
         border-radius: 8px;
         padding: 10px 14px;
         margin: 4px 0;
-        border-left: 3px solid #4fc3f7;
-        color: #ffffff;
+        border-left: 3px solid #1a66cc;
+        color: #111111;
     }
 
     div[data-testid="stMetric"] {
-        background-color: #141b2d;
-        border: 1px solid #1e2d3d;
+        background-color: #f8f9fa;
+        border: 1px solid #dddddd;
         border-radius: 10px;
         padding: 15px;
     }
 
     div[data-testid="stMetric"] label {
-        color: #ffffff;
+        color: #333333;
     }
 
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
-        color: #4fc3f7;
+        color: #1a66cc;
     }
 
     .stSelectbox > div > div {
-        background-color: #141b2d;
-        border-color: #1e2d3d;
-        color: #ffffff;
+        background-color: #f8f9fa;
+        border-color: #cccccc;
+        color: #111111;
     }
 
     .stMultiSelect > div > div {
-        background-color: #141b2d;
-        border-color: #1e2d3d;
+        background-color: #f8f9fa;
+        border-color: #cccccc;
     }
 
     header[data-testid="stHeader"] {
-        background-color: #0a0e17;
+        background-color: #ffffff;
     }
 
     .legend-item {
@@ -389,7 +389,7 @@ def render_risk_bar(name, score, max_score=10):
         color = "#44cc88"
     return f"""
     <div style="display:flex; align-items:center; margin:6px 0;">
-        <span style="width:160px; color:#ffffff; font-size:0.85rem;">{name}</span>
+        <span style="width:160px; color:#111111; font-size:0.85rem;">{name}</span>
         <div class="risk-bar" style="flex:1;">
             <div class="risk-fill" style="width:{pct}%; background:{color};"></div>
         </div>
@@ -401,8 +401,8 @@ def render_risk_bar(name, score, max_score=10):
 def page_dashboard():
     st.markdown("""
     <div style="text-align:center; margin-bottom:20px;">
-        <h1 style="color:#4fc3f7; font-size:2.2rem; margin-bottom:5px;">🌍 Global Disaster Resilience Monitor</h1>
-        <p style="color:#ffffff; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
+        <h1 style="color:#1a66cc; font-size:2.2rem; margin-bottom:5px;">🌍 Global Disaster Resilience Monitor</h1>
+        <p style="color:#333333; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -463,11 +463,11 @@ def page_dashboard():
                 text=df_types["Count"], textposition="auto"
             ))
             fig.update_layout(
-                plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                font_color="#ffffff", font_family="Courier New", height=350,
+                plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
+                font_color="#111111", font_family="Courier New", height=350,
                 margin=dict(l=0, r=20, t=10, b=10),
-                xaxis=dict(gridcolor="#1a2332"),
-                yaxis=dict(gridcolor="#1a2332")
+                xaxis=dict(gridcolor="#dddddd"),
+                yaxis=dict(gridcolor="#dddddd")
             )
             st.plotly_chart(fig, width="stretch")
 
@@ -521,8 +521,8 @@ def page_dashboard():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#ffffff;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
-                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
+                    <div style="color:#111111;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -539,7 +539,7 @@ def page_dashboard():
             st.markdown(f"""
             <div class="resource-card">
                 <h4>📄 {_safe(r.get('title', ''))}</h4>
-                <p style="color:#4fc3f7;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
+                <p style="color:#1a66cc;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
                 <p>📍 {_safe(countries_str)} | ⚠️ {_safe(types_str)}</p>
                 <p style="font-size:0.82rem;line-height:1.4;">{_safe(r.get('summary', ''))}</p>
             </div>
@@ -560,14 +560,14 @@ def page_dashboard():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#ffffff;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
-                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
+                    <div style="color:#111111;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
 
 def page_country_analysis():
-    st.markdown('<h1 style="color:#4fc3f7;">🏳️ Country Disaster Analysis</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#1a66cc;">🏳️ Country Disaster Analysis</h1>', unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -650,12 +650,12 @@ def page_country_analysis():
         ))
         fig.update_layout(
             polar=dict(
-                bgcolor="#0a0e17",
-                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#1a2332", color="#ffffff"),
-                angularaxis=dict(gridcolor="#1a2332", color="#ffffff")
+                bgcolor="#f8f9fa",
+                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#cccccc", color="#111111"),
+                angularaxis=dict(gridcolor="#cccccc", color="#111111")
             ),
-            plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-            font_color="#ffffff", font_family="Courier New", height=400,
+            plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
+            font_color="#111111", font_family="Courier New", height=400,
             margin=dict(l=60, r=60, t=30, b=30),
             showlegend=False
         )
@@ -697,8 +697,8 @@ def page_country_analysis():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#ffffff;margin-top:5px;font-size:0.82rem;line-height:1.4;">{_safe(d.get('description', ''))}</div>
-                    <div style="margin-top:4px;font-size:0.7rem;color:#4fc3f7;">Source: {_safe(d.get('source', ''))}</div>
+                    <div style="color:#111111;margin-top:5px;font-size:0.82rem;line-height:1.4;">{_safe(d.get('description', ''))}</div>
+                    <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
         else:
@@ -713,7 +713,7 @@ def page_country_analysis():
                 st.markdown(f"""
                 <div class="resource-card">
                     <h4>📄 {_safe(r.get('title', ''))}</h4>
-                    <p style="color:#4fc3f7;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
+                    <p style="color:#1a66cc;font-size:0.8rem;">{_safe(r.get('authors', ''))} ({r.get('year', '')}) — <i>{_safe(r.get('journal', ''))}</i></p>
                     <p>⚠️ {_safe(types_str)}</p>
                     <p style="font-size:0.82rem;line-height:1.4;">{_safe(r.get('summary', ''))}</p>
                 </div>
@@ -781,12 +781,12 @@ def page_country_analysis():
                 fig_temp.add_hline(y=40, line_dash="dash", line_color="#ff0000", annotation_text="Heat Alert (40°C)")
                 fig_temp.update_layout(
                     title="7-Day Temperature Forecast",
-                    plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#ffffff", font_family="Courier New", height=300,
+                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
+                    font_color="#111111", font_family="Courier New", height=300,
                     margin=dict(l=40, r=20, t=40, b=30),
-                    xaxis=dict(gridcolor="#1a2332"),
-                    yaxis=dict(gridcolor="#1a2332", title="°C"),
-                    legend=dict(bgcolor="rgba(0,0,0,0)")
+                    xaxis=dict(gridcolor="#dddddd"),
+                    yaxis=dict(gridcolor="#dddddd", title="°C"),
+                    legend=dict(bgcolor="rgba(255,255,255,0.8)")
                 )
                 st.plotly_chart(fig_temp, width="stretch")
 
@@ -797,11 +797,11 @@ def page_country_analysis():
                 ))
                 fig_precip.update_layout(
                     title="7-Day Precipitation Forecast",
-                    plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#ffffff", font_family="Courier New", height=250,
+                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
+                    font_color="#111111", font_family="Courier New", height=250,
                     margin=dict(l=40, r=20, t=40, b=30),
-                    xaxis=dict(gridcolor="#1a2332"),
-                    yaxis=dict(gridcolor="#1a2332", title="mm")
+                    xaxis=dict(gridcolor="#dddddd"),
+                    yaxis=dict(gridcolor="#dddddd", title="mm")
                 )
                 st.plotly_chart(fig_precip, width="stretch")
         else:
@@ -838,8 +838,8 @@ def page_country_analysis():
 
 
 def page_live_alerts():
-    st.markdown('<h1 style="color:#4fc3f7;">🚨 Live Disaster Alerts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#ffffff;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#1a66cc;">🚨 Live Disaster Alerts</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#333333;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
 
     with st.spinner("Fetching live data..."):
         events = get_all_live_events()
@@ -904,8 +904,8 @@ def page_live_alerts():
 
 
 def page_drought_heatwave():
-    st.markdown('<h1 style="color:#4fc3f7;">🌡️ Drought & Heatwave Center</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#ffffff;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#1a66cc;">🌡️ Drought & Heatwave Center</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#333333;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
 
     tab_monitor, tab_help, tab_crops, tab_water = st.tabs(["🌡️ Heat Monitor", "💧 Drought Help", "🌾 Crop Advice", "🏗️ Water Harvesting"])
 
@@ -969,10 +969,10 @@ def page_drought_heatwave():
                 fig.add_hline(y=35, line_dash="dot", line_color="#ff8800", annotation_text="Caution: 35°C")
                 fig.update_layout(
                     title=f"7-Day Temperature Forecast — {monitor_country}",
-                    plot_bgcolor="#0a0e17", paper_bgcolor="#0a0e17",
-                    font_color="#ffffff", font_family="Courier New", height=350,
-                    xaxis=dict(gridcolor="#1a2332"), yaxis=dict(gridcolor="#1a2332", title="°C"),
-                    legend=dict(bgcolor="rgba(0,0,0,0)"),
+                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
+                    font_color="#111111", font_family="Courier New", height=350,
+                    xaxis=dict(gridcolor="#dddddd"), yaxis=dict(gridcolor="#dddddd", title="°C"),
+                    legend=dict(bgcolor="rgba(255,255,255,0.8)"),
                     margin=dict(l=40, r=20, t=40, b=30)
                 )
                 st.plotly_chart(fig, width="stretch")
@@ -1029,7 +1029,7 @@ def page_drought_heatwave():
                     <h4>🏥 {org['name']}</h4>
                     <p>Focus: {org['focus']}</p>
                     <p>Type: {org['type']}</p>
-                    <p>🔗 <a href="{org['url']}" target="_blank" style="color:#4fc3f7;">{org['url']}</a></p>
+                    <p>🔗 <a href="{org['url']}" target="_blank" style="color:#1a66cc;">{org['url']}</a></p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1058,15 +1058,15 @@ def page_drought_heatwave():
             desc = parts[1].strip() if len(parts) > 1 else ""
             st.markdown(f"""
             <div class="alert-card alert-moderate">
-                <div class="alert-type" style="color:#4fc3f7;">#{i+1} {name}</div>
+                <div class="alert-type" style="color:#1a66cc;">#{i+1} {name}</div>
                 <div class="alert-title">{desc}</div>
             </div>
             """, unsafe_allow_html=True)
 
 
 def page_resources():
-    st.markdown('<h1 style="color:#4fc3f7;">🆘 Resource Hub</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#ffffff;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#1a66cc;">🆘 Resource Hub</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#333333;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
 
     tab_orgs, tab_shelters, tab_evac, tab_prep, tab_community, tab_report = st.tabs(["🏥 Aid Organizations", "🏠 Shelter & Water Locator", "🚨 Evacuation Guides", "🎒 Preparedness", "👥 Community", "📝 Report Disaster"])
 
@@ -1084,7 +1084,7 @@ def page_resources():
                     <h4>🏥 {org['name']}</h4>
                     <p><b>Focus:</b> {org['focus']}</p>
                     <p><b>Type:</b> {org['type']}</p>
-                    <p>🔗 <a href="{org['url']}" target="_blank" style="color:#4fc3f7;">{org['url']}</a></p>
+                    <p>🔗 <a href="{org['url']}" target="_blank" style="color:#1a66cc;">{org['url']}</a></p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1100,7 +1100,7 @@ def page_resources():
                 <div class="resource-card">
                     <h4>🏠 {_safe(s['name'])}</h4>
                     <p>{_safe(s['description'])}</p>
-                    <p>🔗 <a href="{_safe(s['url'])}" target="_blank" style="color:#4fc3f7;">Visit Resource</a></p>
+                    <p>🔗 <a href="{_safe(s['url'])}" target="_blank" style="color:#1a66cc;">Visit Resource</a></p>
                 </div>
                 """, unsafe_allow_html=True)
         with sh_col2:
@@ -1110,7 +1110,7 @@ def page_resources():
                 <div class="resource-card">
                     <h4>💧 {_safe(w['name'])}</h4>
                     <p>{_safe(w['description'])}</p>
-                    <p>🔗 <a href="{_safe(w['url'])}" target="_blank" style="color:#4fc3f7;">Visit Resource</a></p>
+                    <p>🔗 <a href="{_safe(w['url'])}" target="_blank" style="color:#1a66cc;">Visit Resource</a></p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1245,10 +1245,10 @@ def page_resources():
                 sev_class = report.get("severity", "moderate").lower()
                 st.markdown(f"""
                 <div class="alert-card alert-{_safe(sev_class)}">
-                    <div class="alert-type" style="color:#4fc3f7;">📝 {_safe(report.get('type', ''))} — {_safe(report.get('severity', ''))}</div>
+                    <div class="alert-type" style="color:#1a66cc;">📝 {_safe(report.get('type', ''))} — {_safe(report.get('severity', ''))}</div>
                     <div class="alert-title">{_safe(report.get('location', ''))}, {_safe(report.get('country', ''))}</div>
                     <div class="alert-time">{_safe(report.get('date', ''))} | Submitted: {_safe(report.get('submitted_at', ''))}</div>
-                    <div style="color:#ffffff;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
+                    <div style="color:#111111;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1256,10 +1256,10 @@ def page_resources():
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding:15px 0;">
-        <h1 style="color:#4fc3f7; font-size:1.4rem; margin:0;">🌍 DisasterWatch</h1>
-        <p style="color:#ffffff; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
+        <h1 style="color:#1a66cc; font-size:1.4rem; margin:0;">🌍 DisasterWatch</h1>
+        <p style="color:#333333; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
     </div>
-    <hr style="border-color:rgba(255,255,255,0.4); margin:10px 0;">
+    <hr style="border-color:rgba(0,0,0,0.2); margin:10px 0;">
     """, unsafe_allow_html=True)
 
     page = st.radio(
@@ -1268,7 +1268,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
-    st.markdown("<hr style='border-color:rgba(255,255,255,0.4);'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(0,0,0,0.2);'>", unsafe_allow_html=True)
 
     st.markdown("#### Quick Stats")
     try:
@@ -1282,22 +1282,22 @@ with st.sidebar:
         drought_count = sum(1 for e in quick_events if e.get("type") == "Drought")
 
         st.markdown(f"""
-        <div style="font-size:0.9rem; color:#ffffff; font-weight:600;">
-            <p>🔴 Earthquakes: <b style="color:#ff4444;">{eq_count}</b></p>
-            <p>🌀 Storms: <b style="color:#4488ff;">{storm_count}</b></p>
-            <p>🔥 Wildfires: <b style="color:#ff8800;">{fire_count}</b></p>
-            <p>🌊 Floods: <b style="color:#0066cc;">{flood_count}</b></p>
-            <p>🌋 Volcanoes: <b style="color:#ff6600;">{volc_count}</b></p>
-            <p>🏔️ Landslides: <b style="color:#996633;">{landslide_count}</b></p>
-            <p>☀️ Droughts: <b style="color:#cc8800;">{drought_count}</b></p>
+        <div style="font-size:0.9rem; color:#111111; font-weight:600;">
+            <p>🔴 Earthquakes: <b style="color:#cc0000;">{eq_count}</b></p>
+            <p>🌀 Storms: <b style="color:#1a66cc;">{storm_count}</b></p>
+            <p>🔥 Wildfires: <b style="color:#cc5500;">{fire_count}</b></p>
+            <p>🌊 Floods: <b style="color:#0055aa;">{flood_count}</b></p>
+            <p>🌋 Volcanoes: <b style="color:#cc4400;">{volc_count}</b></p>
+            <p>🏔️ Landslides: <b style="color:#775522;">{landslide_count}</b></p>
+            <p>☀️ Droughts: <b style="color:#aa6600;">{drought_count}</b></p>
         </div>
         """, unsafe_allow_html=True)
     except Exception:
-        st.markdown('<p style="color:#ffffff; font-weight:600;">Loading stats...</p>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#111111; font-weight:600;">Loading stats...</p>', unsafe_allow_html=True)
 
-    st.markdown("<hr style='border-color:rgba(255,255,255,0.4);'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(0,0,0,0.2);'>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div style="font-size:0.75rem; color:#ffffff; text-align:center;">
+    <div style="font-size:0.75rem; color:#333333; text-align:center;">
         <p>Data Sources: USGS, NASA EONET, GDACS, ReliefWeb, Open-Meteo</p>
         <p>Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
     </div>
