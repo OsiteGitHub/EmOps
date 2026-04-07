@@ -115,16 +115,10 @@ CUSTOM_CSS = """
         opacity: 0.8;
     }
 
-    /* Hide native sidebar toggle arrows entirely */
+    /* Hide native sidebar toggle arrows — keep in normal flow so click() works */
     [data-testid="stSidebarCollapseButton"],
     [data-testid="collapsedControl"] {
-        visibility: hidden !important;
-        position: fixed !important;
-        left: -9999px !important;
-        top: -9999px !important;
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
+        opacity: 0 !important;
         pointer-events: none !important;
     }
 
@@ -1629,23 +1623,73 @@ with st.sidebar:
 components.html("""
 <script>
 (function() {
-  function isSidebarOpen() {
-    var s = window.parent.document.querySelector('section[data-testid="stSidebar"]');
-    if (!s) return false;
-    return s.getBoundingClientRect().left > -150;
+  var pd = window.parent.document;
+
+  /* ── helpers ───────────────────────────────────────────── */
+  function getSidebar() {
+    return pd.querySelector('section[data-testid="stSidebar"]');
   }
 
-  function updateLabel(btn) {
-    if (!btn) return;
-    if (isSidebarOpen()) {
-      btn.innerHTML = '<span style="font-size:1rem;line-height:1;">&#x2715;</span>&nbsp;Close';
+  function isOpen() {
+    /* Read stored state; fall back to checking bounding rect */
+    var stored = window.parent.localStorage.getItem('cst_sidebar_open');
+    if (stored !== null) return stored === 'true';
+    var s = getSidebar();
+    return s ? s.getBoundingClientRect().left > -100 : true;
+  }
+
+  /* ── CSS injection to control sidebar visibility ────────── */
+  function ensureStyle() {
+    var s = pd.getElementById('cst-sb-style');
+    if (!s) {
+      s = pd.createElement('style');
+      s.id = 'cst-sb-style';
+      pd.head.appendChild(s);
+    }
+    return s;
+  }
+
+  function applySidebarState(open) {
+    window.parent.localStorage.setItem('cst_sidebar_open', String(open));
+    var st = ensureStyle();
+    if (open) {
+      st.textContent = [
+        'section[data-testid="stSidebar"]{',
+        '  transform:translateX(0) !important;',
+        '  min-width:var(--sidebar-width,244px) !important;',
+        '  width:var(--sidebar-width,244px) !important;',
+        '  display:block !important;',
+        '}'
+      ].join('');
     } else {
-      btn.innerHTML = '<span style="font-size:1rem;line-height:1;">&#9776;</span>&nbsp;Menu';
+      st.textContent = [
+        'section[data-testid="stSidebar"]{',
+        '  transform:translateX(-110%) !important;',
+        '  min-width:0 !important;',
+        '  width:0 !important;',
+        '  overflow:hidden !important;',
+        '}',
+        '[data-testid="stAppViewContainer"]>section:not([data-testid="stSidebar"]),',
+        '.main .block-container{',
+        '  margin-left:0 !important;',
+        '  padding-left:1.5rem !important;',
+        '}'
+      ].join('');
     }
   }
 
+  /* ── button label ───────────────────────────────────────── */
+  function updateLabel(btn) {
+    if (!btn) return;
+    if (isOpen()) {
+      btn.innerHTML = '&#x2715;&nbsp;Close';
+    } else {
+      btn.innerHTML = '&#9776;&nbsp;Menu';
+    }
+  }
+
+  /* ── inject the custom button once ─────────────────────── */
   function injectBtn() {
-    var pd = window.parent.document;
     if (pd.getElementById('cst-sidebar-toggle')) return;
 
     var btn = pd.createElement('div');
@@ -1660,25 +1704,23 @@ components.html("""
       'background:#1a66cc',
       'color:#ffffff',
       'border-radius:8px',
-      'padding:7px 14px',
-      'font-size:0.82rem',
+      'padding:7px 15px',
+      'font-size:0.84rem',
       'font-family:Courier New,Courier,monospace',
+      'font-weight:600',
+      'letter-spacing:0.03em',
       'cursor:pointer',
       'box-shadow:0 2px 10px rgba(0,0,0,0.22)',
       'user-select:none',
-      'display:flex',
-      'align-items:center',
-      'gap:6px',
       'transition:background 0.18s,box-shadow 0.18s',
-      'letter-spacing:0.02em',
-      'font-weight:600',
-      'min-width:88px',
-      'justify-content:center'
+      'min-width:84px',
+      'text-align:center',
+      'line-height:1.6'
     ].join(';');
 
     btn.onmouseenter = function() {
       btn.style.background = '#1452a8';
-      btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.28)';
+      btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.30)';
     };
     btn.onmouseleave = function() {
       btn.style.background = '#1a66cc';
@@ -1686,22 +1728,21 @@ components.html("""
     };
 
     btn.onclick = function() {
-      if (isSidebarOpen()) {
-        var b = pd.querySelector('[data-testid="stSidebarCollapseButton"] button');
-        if (b) b.click();
-      } else {
-        var b = pd.querySelector('[data-testid="collapsedControl"] button');
-        if (b) b.click();
-      }
-      setTimeout(function() { updateLabel(btn); }, 380);
+      var nowOpen = isOpen();
+      applySidebarState(!nowOpen);
+      updateLabel(btn);
     };
 
+    /* Set initial state (sidebar starts open per Streamlit config) */
+    if (window.parent.localStorage.getItem('cst_sidebar_open') === null) {
+      window.parent.localStorage.setItem('cst_sidebar_open', 'true');
+    }
+    applySidebarState(isOpen());
     updateLabel(btn);
     pd.body.appendChild(btn);
-    setInterval(function() { updateLabel(btn); }, 700);
   }
 
-  setTimeout(injectBtn, 400);
+  setTimeout(injectBtn, 350);
 })();
 </script>
 """, height=0)
