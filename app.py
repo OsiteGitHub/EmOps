@@ -107,7 +107,7 @@ CUSTOM_CSS = """
     section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] label {
         color: #111111 !important;
-        font-weight: 500;
+        font-weight: 700 !important;
     }
 
     section[data-testid="stSidebar"] hr {
