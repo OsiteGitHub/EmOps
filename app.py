@@ -115,43 +115,27 @@ CUSTOM_CSS = """
         opacity: 0.8;
     }
 
-    [data-testid="stSidebarCollapseButton"] button,
-    [data-testid="collapsedControl"] button {
-        position: relative !important;
-        width: 2rem !important;
-        height: 2rem !important;
-        overflow: hidden !important;
-        background: transparent !important;
-        border: none !important;
-    }
-
-    [data-testid="stSidebarCollapseButton"] button > *,
-    [data-testid="collapsedControl"] button > * {
+    /* Hide native sidebar toggle arrows entirely */
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"] {
         visibility: hidden !important;
-        font-size: 0 !important;
+        position: fixed !important;
+        left: -9999px !important;
+        top: -9999px !important;
         width: 0 !important;
         height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
     }
 
-    [data-testid="stSidebarCollapseButton"] button::after,
-    [data-testid="collapsedControl"] button::after {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        font-size: 1.1rem !important;
-        font-family: Arial, Helvetica, sans-serif !important;
-        color: #444444 !important;
-        visibility: visible !important;
-        line-height: 1 !important;
-    }
-
-    [data-testid="stSidebarCollapseButton"] button::after {
-        content: "◀" !important;
-    }
-
-    [data-testid="collapsedControl"] button::after {
-        content: "▶" !important;
+    /* Hide the three-dot header menu entirely */
+    #MainMenu,
+    [data-testid="stMainMenu"],
+    header [data-testid="stToolbar"],
+    header button[aria-label="Open Settings"],
+    header button[title="Open Settings"] {
+        display: none !important;
+        visibility: hidden !important;
     }
 
     .metric-card {
@@ -1641,6 +1625,86 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+
+components.html("""
+<script>
+(function() {
+  function isSidebarOpen() {
+    var s = window.parent.document.querySelector('section[data-testid="stSidebar"]');
+    if (!s) return false;
+    return s.getBoundingClientRect().left > -150;
+  }
+
+  function updateLabel(btn) {
+    if (!btn) return;
+    if (isSidebarOpen()) {
+      btn.innerHTML = '<span style="font-size:1rem;line-height:1;">&#x2715;</span>&nbsp;Close';
+    } else {
+      btn.innerHTML = '<span style="font-size:1rem;line-height:1;">&#9776;</span>&nbsp;Menu';
+    }
+  }
+
+  function injectBtn() {
+    var pd = window.parent.document;
+    if (pd.getElementById('cst-sidebar-toggle')) return;
+
+    var btn = pd.createElement('div');
+    btn.id = 'cst-sidebar-toggle';
+    btn.setAttribute('role', 'button');
+    btn.setAttribute('tabindex', '0');
+    btn.style.cssText = [
+      'position:fixed',
+      'top:12px',
+      'left:14px',
+      'z-index:2147483647',
+      'background:#1a66cc',
+      'color:#ffffff',
+      'border-radius:8px',
+      'padding:7px 14px',
+      'font-size:0.82rem',
+      'font-family:Courier New,Courier,monospace',
+      'cursor:pointer',
+      'box-shadow:0 2px 10px rgba(0,0,0,0.22)',
+      'user-select:none',
+      'display:flex',
+      'align-items:center',
+      'gap:6px',
+      'transition:background 0.18s,box-shadow 0.18s',
+      'letter-spacing:0.02em',
+      'font-weight:600',
+      'min-width:88px',
+      'justify-content:center'
+    ].join(';');
+
+    btn.onmouseenter = function() {
+      btn.style.background = '#1452a8';
+      btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.28)';
+    };
+    btn.onmouseleave = function() {
+      btn.style.background = '#1a66cc';
+      btn.style.boxShadow = '0 2px 10px rgba(0,0,0,0.22)';
+    };
+
+    btn.onclick = function() {
+      if (isSidebarOpen()) {
+        var b = pd.querySelector('[data-testid="stSidebarCollapseButton"] button');
+        if (b) b.click();
+      } else {
+        var b = pd.querySelector('[data-testid="collapsedControl"] button');
+        if (b) b.click();
+      }
+      setTimeout(function() { updateLabel(btn); }, 380);
+    };
+
+    updateLabel(btn);
+    pd.body.appendChild(btn);
+    setInterval(function() { updateLabel(btn); }, 700);
+  }
+
+  setTimeout(injectBtn, 400);
+})();
+</script>
+""", height=0)
 
 if "🗺️ Dashboard" in page:
     page_dashboard()
