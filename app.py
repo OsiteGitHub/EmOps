@@ -338,6 +338,152 @@ CUSTOM_CSS = """
         margin-right: 4px;
         vertical-align: middle;
     }
+
+    /* ── Main menu (⋮ three-dots) popup ─────────────────────── */
+    [data-baseweb="popover"] {
+        min-width: 240px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
+        overflow: hidden !important;
+    }
+
+    [data-baseweb="popover"] [data-baseweb="menu"] {
+        min-width: 240px !important;
+        padding: 8px 0 !important;
+        background: #ffffff !important;
+        border-radius: 12px !important;
+    }
+
+    [data-baseweb="popover"] ul {
+        min-width: 240px !important;
+        padding: 8px 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+        background: #ffffff !important;
+    }
+
+    [data-baseweb="popover"] li,
+    [data-baseweb="popover"] [role="option"],
+    [data-baseweb="popover"] [data-baseweb="menu-item"] {
+        padding: 12px 20px !important;
+        font-size: 0.92rem !important;
+        line-height: 1.5 !important;
+        color: #111111 !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        letter-spacing: 0.01em !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        transition: background 0.15s !important;
+    }
+
+    [data-baseweb="popover"] li:last-child,
+    [data-baseweb="popover"] [role="option"]:last-child {
+        border-bottom: none !important;
+    }
+
+    [data-baseweb="popover"] li:hover,
+    [data-baseweb="popover"] [role="option"]:hover,
+    [data-baseweb="popover"] [data-baseweb="menu-item"]:hover {
+        background: #f0f4ff !important;
+        color: #1a66cc !important;
+    }
+
+    [data-baseweb="popover"] li span,
+    [data-baseweb="popover"] [role="option"] span,
+    [data-baseweb="popover"] [data-baseweb="menu-item"] span {
+        font-family: 'Material Icons' !important;
+        font-size: 1.15rem !important;
+        color: #555555 !important;
+        line-height: 1 !important;
+        vertical-align: middle !important;
+    }
+
+    /* ── Settings / About modal ─────────────────────────────── */
+    [data-baseweb="modal"],
+    [data-testid="stModal"] {
+        border-radius: 14px !important;
+        overflow: hidden !important;
+    }
+
+    [data-baseweb="modal"] > div,
+    [data-testid="stModal"] > div {
+        border-radius: 14px !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        min-width: 360px !important;
+        box-shadow: 0 12px 48px rgba(0,0,0,0.22) !important;
+    }
+
+    [data-baseweb="modal"] h2,
+    [data-baseweb="modal"] h3 {
+        font-size: 1.1rem !important;
+        color: #1a66cc !important;
+        padding: 20px 24px 12px !important;
+        margin: 0 !important;
+        border-bottom: 1px solid #e8e8e8 !important;
+        font-family: 'Courier New', Courier, monospace !important;
+    }
+
+    [data-baseweb="modal"] label,
+    [data-baseweb="modal"] p {
+        font-size: 0.88rem !important;
+        color: #222222 !important;
+        line-height: 1.6 !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        padding: 4px 0 !important;
+    }
+
+    [data-baseweb="modal"] [data-baseweb="form-control"],
+    [data-baseweb="modal"] [data-baseweb="block"] {
+        padding: 12px 24px !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+
+    [data-baseweb="modal"] [data-baseweb="form-control"]:last-child {
+        border-bottom: none !important;
+    }
+
+    [data-baseweb="modal"] [data-baseweb="radio"],
+    [data-baseweb="modal"] [data-baseweb="checkbox"] {
+        gap: 10px !important;
+        align-items: center !important;
+        margin: 6px 0 !important;
+    }
+
+    /* Wider settings panel to avoid text cramping */
+    [data-testid="stSettings"] {
+        min-width: 320px !important;
+    }
+
+    [data-testid="stSettings"] section {
+        padding: 16px 20px !important;
+    }
+
+    [data-testid="stSettings"] label {
+        font-size: 0.88rem !important;
+        line-height: 1.6 !important;
+        color: #111111 !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+
+    [data-testid="stSettings"] p {
+        font-size: 0.82rem !important;
+        color: #555555 !important;
+        line-height: 1.55 !important;
+        margin: 0 0 8px 0 !important;
+    }
+
+    /* Menu separator lines clean */
+    [data-baseweb="popover"] hr {
+        margin: 4px 12px !important;
+        border: none !important;
+        border-top: 1px solid #e8e8e8 !important;
+    }
 </style>
 """
 
