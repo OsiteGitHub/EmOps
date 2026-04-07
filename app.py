@@ -1557,13 +1557,6 @@ def page_mining():
 
 
 with st.sidebar:
-    st.markdown("""
-    <div style="text-align:center; padding:22px 8px 14px 8px;">
-        <h1 style="color:#111111; font-size:3rem; margin:0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
-    </div>
-    <hr style="border-color:rgba(0,0,0,0.15); margin:0 0 10px 0;">
-    """, unsafe_allow_html=True)
-
     page = st.radio(
         "Navigation",
         ["🗺️ Dashboard", "🏳️ Country Analysis", "🚨 Live Alerts", "🌡️ Drought & Heatwave", "⛏️ Mining Disasters", "🆘 Resource Hub"],
