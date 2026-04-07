@@ -609,23 +609,30 @@ def page_dashboard():
             fig = go.Figure(go.Bar(
                 x=df_types["Count"], y=df_types["Type"],
                 orientation='h', marker_color=colors,
-                text=df_types["Count"], textposition="auto"
+                text=df_types["Count"], textposition="auto",
+                textfont=dict(color="#111111", family="Courier New"),
+                insidetextfont=dict(color="#111111"),
+                outsidetextfont=dict(color="#111111")
             ))
             fig.update_layout(
                 plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-                font_color="#111111", font_family="Courier New", height=350,
+                font=dict(color="#111111", family="Courier New"), height=350,
                 margin=dict(l=0, r=20, t=10, b=10),
-                xaxis=dict(gridcolor="#dddddd"),
-                yaxis=dict(gridcolor="#dddddd")
+                xaxis=dict(gridcolor="#dddddd", tickfont=dict(color="#111111")),
+                yaxis=dict(gridcolor="#dddddd", tickfont=dict(color="#111111"))
             )
             st.plotly_chart(fig, width="stretch")
 
     with col_right:
         st.markdown('<div class="section-header"><h2>🚨 Latest Alerts</h2></div>', unsafe_allow_html=True)
-        sorted_events = sorted(events, key=lambda e: (
-            {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}.get(e.get("severity", "Low"), 4),
-            _sort_time(e)
-        ))
+        sev_rank = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
+        sorted_events = sorted(
+            all_events,
+            key=lambda e: (
+                -(_sort_time(e) - datetime.min).total_seconds(),
+                sev_rank.get(e.get("severity", "Low"), 4)
+            )
+        )
         alert_container = st.container()
         with alert_container:
             for event in sorted_events[:12]:
