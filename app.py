@@ -528,8 +528,9 @@ def render_risk_bar(name, score, max_score=10):
 def page_dashboard():
     st.markdown("""
     <div style="text-align:center; margin-bottom:20px;">
-        <h1 style="color:#1a66cc; font-size:2.2rem; margin-bottom:5px;">Global Disaster Resilience Monitor</h1>
-        <p style="color:#333333; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
+        <h1 style="color:#111111; font-size:3rem; margin:0 0 4px 0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
+        <h2 style="color:#111111; font-size:1.4rem; margin:0 0 8px 0; font-weight:600;">Global Disaster Resilience Monitor</h2>
+        <p style="color:#555555; font-size:0.95rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1558,8 +1559,7 @@ def page_mining():
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding:22px 8px 14px 8px;">
-        <h1 style="color:#1a66cc; font-size:2rem; margin:0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
-        <p style="color:#555555; font-size:0.72rem; margin:8px 0 0 0; letter-spacing:0.06em; text-transform:uppercase;">Global Disaster Resilience Monitor</p>
+        <h1 style="color:#111111; font-size:3rem; margin:0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
     </div>
     <hr style="border-color:rgba(0,0,0,0.15); margin:0 0 10px 0;">
     """, unsafe_allow_html=True)
