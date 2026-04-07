@@ -53,7 +53,7 @@ def _sort_time(e):
 
 
 st.set_page_config(
-    page_title="Global Disaster Resilience Monitor",
+    page_title="EmOps – Global Disaster Resilience Monitor",
     page_icon="🌍",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -139,6 +139,12 @@ CUSTOM_CSS = """
         padding: 20px;
         text-align: center;
         margin-bottom: 10px;
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
     }
 
     .metric-card h3 {
@@ -160,6 +166,7 @@ CUSTOM_CSS = """
     .metric-card .value.blue { color: #1a66cc; }
     .metric-card .value.green { color: #228855; }
     .metric-card .value.yellow { color: #aa8800; }
+    .metric-card .value.brown { color: #7a4f2a; }
 
     .alert-card {
         background: #f8f9fa;
@@ -521,14 +528,13 @@ def render_risk_bar(name, score, max_score=10):
 def page_dashboard():
     st.markdown("""
     <div style="text-align:center; margin-bottom:20px;">
-        <h1 style="color:#1a66cc; font-size:2.2rem; margin-bottom:5px;">🌍 Global Disaster Resilience Monitor</h1>
+        <h1 style="color:#1a66cc; font-size:2.2rem; margin-bottom:5px;">Global Disaster Resilience Monitor</h1>
         <p style="color:#333333; font-size:1rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
     </div>
     """, unsafe_allow_html=True)
 
     with st.spinner("Loading live disaster data..."):
         events = get_all_live_events()
-        reliefweb = fetch_reliefweb_disasters(50)
 
     mine_events = get_mine_events()
     ree_events = get_rare_earth_events()
@@ -542,7 +548,7 @@ def page_dashboard():
         s = e.get("severity", "Moderate")
         severity_counts[s] = severity_counts.get(s, 0) + 1
 
-    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    c1, c2, c3, c4, c5 = st.columns(5)
     with c1:
         st.markdown(render_metric("Live Events", len(events), "red"), unsafe_allow_html=True)
     with c2:
@@ -553,8 +559,6 @@ def page_dashboard():
         st.markdown(render_metric("Disaster Types", len(type_counts), "blue"), unsafe_allow_html=True)
     with c5:
         st.markdown(render_metric("Mine Sites", len(mine_events) + len(ree_events), "brown"), unsafe_allow_html=True)
-    with c6:
-        st.markdown(render_metric("ReliefWeb", len(reliefweb), "green"), unsafe_allow_html=True)
 
     st.markdown('<div class="section-header"><h2>🗺️ Global Disaster + Mining Map</h2></div>', unsafe_allow_html=True)
 
@@ -616,23 +620,7 @@ def page_dashboard():
             for event in sorted_events[:12]:
                 st.markdown(render_alert_card(event), unsafe_allow_html=True)
 
-    if reliefweb:
-        st.markdown('<div class="section-header"><h2>📰 Recent Disaster Reports (ReliefWeb)</h2></div>', unsafe_allow_html=True)
-        rw_cols = st.columns(3)
-        for i, disaster in enumerate(reliefweb[:9]):
-            with rw_cols[i % 3]:
-                countries_str = ", ".join(disaster.get("countries", [])[:3])
-                types_str = ", ".join(disaster.get("types", [])[:2])
-                st.markdown(f"""
-                <div class="resource-card">
-                    <h4>{disaster.get('name', 'Unknown')[:60]}</h4>
-                    <p>📍 {countries_str}</p>
-                    <p>⚠️ {types_str}</p>
-                    <p>📅 {disaster.get('date', '')[:10]}</p>
-                </div>
-                """, unsafe_allow_html=True)
-
-    st.markdown('<div class="section-header"><h2>🌍 Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>📋 Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
 
     dr_tab1, dr_tab2, dr_tab3 = st.tabs(["📰 News & Situation Reports", "📚 Research Publications", "🌴 Tropical Focus"])
 
@@ -1570,8 +1558,8 @@ def page_mining():
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding:22px 8px 14px 8px;">
-        <h1 style="color:#1a66cc; font-size:1.35rem; margin:0; line-height:1.3;">🌍 DisasterWatch</h1>
-        <p style="color:#555555; font-size:0.72rem; margin:6px 0 0 0; letter-spacing:0.04em; text-transform:uppercase;">Global Disaster Resilience Monitor</p>
+        <h1 style="color:#1a66cc; font-size:2rem; margin:0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
+        <p style="color:#555555; font-size:0.72rem; margin:8px 0 0 0; letter-spacing:0.06em; text-transform:uppercase;">Global Disaster Resilience Monitor</p>
     </div>
     <hr style="border-color:rgba(0,0,0,0.15); margin:0 0 10px 0;">
     """, unsafe_allow_html=True)
