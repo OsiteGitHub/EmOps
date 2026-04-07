@@ -117,60 +117,41 @@ CUSTOM_CSS = """
 
     [data-testid="stSidebarCollapseButton"] button,
     [data-testid="collapsedControl"] button {
-        font-size: 0 !important;
-        color: transparent !important;
-        overflow: hidden !important;
-        text-indent: -9999px !important;
-        line-height: 0 !important;
+        position: relative !important;
         width: 2rem !important;
         height: 2rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        overflow: hidden !important;
+        background: transparent !important;
+        border: none !important;
     }
 
-    [data-testid="stSidebarCollapseButton"] button *,
-    [data-testid="collapsedControl"] button * {
-        display: none !important;
+    [data-testid="stSidebarCollapseButton"] button > *,
+    [data-testid="collapsedControl"] button > * {
+        visibility: hidden !important;
+        font-size: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button::after,
+    [data-testid="collapsedControl"] button::after {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        font-size: 1.1rem !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        color: #444444 !important;
+        visibility: visible !important;
+        line-height: 1 !important;
     }
 
     [data-testid="stSidebarCollapseButton"] button::after {
-        content: "\\25C0";
-        font-size: 1.2rem;
-        color: #111111;
-        display: block;
-        text-indent: 0 !important;
-        line-height: normal !important;
+        content: "◀" !important;
     }
 
     [data-testid="collapsedControl"] button::after {
-        content: "\\25B6";
-        font-size: 1.2rem;
-        color: #111111;
-        display: block;
-        text-indent: 0 !important;
-        line-height: normal !important;
-    }
-
-    [data-testid="stMainMenu"] button {
-        font-size: 0 !important;
-        color: transparent !important;
-        overflow: hidden !important;
-        text-indent: -9999px !important;
-        line-height: 0 !important;
-    }
-
-    [data-testid="stMainMenu"] button * {
-        display: none !important;
-    }
-
-    [data-testid="stMainMenu"] button::after {
-        content: "\\22EE";
-        font-size: 1.4rem;
-        color: #111111;
-        display: block;
-        text-indent: 0 !important;
-        line-height: normal !important;
+        content: "▶" !important;
     }
 
     .metric-card {
