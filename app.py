@@ -81,6 +81,13 @@ CUSTOM_CSS = """
         font-family: 'Courier New', Courier, monospace;
     }
 
+    /* Reduce default top padding of main content area */
+    .stMainBlockContainer,
+    div[data-testid="stMainBlockContainer"],
+    .block-container {
+        padding-top: 2rem !important;
+    }
+
     section[data-testid="stSidebar"] {
         background-color: #f0f0f0;
         border-right: 1px solid #cccccc;
@@ -527,7 +534,7 @@ def render_risk_bar(name, score, max_score=10):
 
 def page_dashboard():
     st.markdown("""
-    <div style="text-align:center; margin-bottom:20px;">
+    <div style="text-align:center; margin-top:0; margin-bottom:20px;">
         <h1 style="color:#111111; font-size:3rem; margin:0 0 4px 0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
         <h2 style="color:#111111; font-size:1.4rem; margin:0 0 8px 0; font-weight:600;">Global Disaster Resilience Monitor</h2>
         <p style="color:#555555; font-size:0.95rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
