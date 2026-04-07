@@ -1569,11 +1569,11 @@ def page_mining():
 
 with st.sidebar:
     st.markdown("""
-    <div style="text-align:center; padding:15px 0;">
-        <h1 style="color:#1a66cc; font-size:1.4rem; margin:0;">🌍 DisasterWatch</h1>
-        <p style="color:#333333; font-size:0.75rem; margin:5px 0 0 0;">Global Disaster Resilience Monitor</p>
+    <div style="text-align:center; padding:22px 8px 14px 8px;">
+        <h1 style="color:#1a66cc; font-size:1.35rem; margin:0; line-height:1.3;">🌍 DisasterWatch</h1>
+        <p style="color:#555555; font-size:0.72rem; margin:6px 0 0 0; letter-spacing:0.04em; text-transform:uppercase;">Global Disaster Resilience Monitor</p>
     </div>
-    <hr style="border-color:rgba(0,0,0,0.2); margin:10px 0;">
+    <hr style="border-color:rgba(0,0,0,0.15); margin:0 0 10px 0;">
     """, unsafe_allow_html=True)
 
     page = st.radio(
@@ -1649,6 +1649,18 @@ components.html("""
     return s;
   }
 
+  function getSidebarWidth() {
+    var s = getSidebar();
+    if (!s) return 248;
+    var w = s.getBoundingClientRect().width;
+    return w > 10 ? w : 248;
+  }
+
+  function positionBtn(btn, open) {
+    if (!btn) return;
+    btn.style.left = open ? (getSidebarWidth() + 12) + 'px' : '14px';
+  }
+
   function applySidebarState(open) {
     window.parent.localStorage.setItem('cst_sidebar_open', String(open));
     var st = ensureStyle();
@@ -1676,6 +1688,8 @@ components.html("""
         '}'
       ].join('');
     }
+    var btn = pd.getElementById('cst-sidebar-toggle');
+    setTimeout(function() { positionBtn(btn, open); }, 80);
   }
 
   /* ── button label ───────────────────────────────────────── */
@@ -1712,7 +1726,7 @@ components.html("""
       'cursor:pointer',
       'box-shadow:0 2px 10px rgba(0,0,0,0.22)',
       'user-select:none',
-      'transition:background 0.18s,box-shadow 0.18s',
+      'transition:background 0.18s,box-shadow 0.18s,left 0.28s ease',
       'min-width:84px',
       'text-align:center',
       'line-height:1.6'
@@ -1737,9 +1751,12 @@ components.html("""
     if (window.parent.localStorage.getItem('cst_sidebar_open') === null) {
       window.parent.localStorage.setItem('cst_sidebar_open', 'true');
     }
-    applySidebarState(isOpen());
-    updateLabel(btn);
     pd.body.appendChild(btn);
+    var openNow = isOpen();
+    applySidebarState(openNow);
+    updateLabel(btn);
+    /* Position after sidebar has rendered */
+    setTimeout(function() { positionBtn(btn, isOpen()); }, 300);
   }
 
   setTimeout(injectBtn, 350);
