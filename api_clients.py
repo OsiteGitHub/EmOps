@@ -210,10 +210,12 @@ def fetch_gdacs_events():
 
 
 def get_all_live_events():
+    from regional_data import get_regional_events
     earthquakes = fetch_earthquakes(min_magnitude=2.5, days=7)
     nasa = fetch_nasa_events()
     gdacs = fetch_gdacs_events()
-    all_events = earthquakes + nasa + gdacs
+    regional = get_regional_events()
+    all_events = earthquakes + nasa + gdacs + regional
     seen = set()
     unique = []
     for e in all_events:
