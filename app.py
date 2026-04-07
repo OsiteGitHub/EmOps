@@ -65,6 +65,16 @@ CUSTOM_CSS = """
         font-family: 'Courier New', Courier, monospace !important;
     }
 
+    .material-icons,
+    .material-icons-round,
+    .material-icons-outlined,
+    [data-testid="collapsedControl"] span,
+    [data-testid="collapsedControl"] svg,
+    button[kind="header"] span,
+    span[class*="material"] {
+        font-family: 'Material Icons' !important;
+    }
+
     .stApp {
         background-color: #ffffff;
         color: #111111;
