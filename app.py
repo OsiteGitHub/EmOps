@@ -28,6 +28,11 @@ from disaster_reports import (
     get_disasters_by_type, get_research_by_type,
     get_tropical_disasters
 )
+from mine_data import (
+    ABANDONED_MINES, RARE_EARTH_MINES,
+    get_mine_events, get_rare_earth_events,
+    get_mines_by_country, get_critical_mines
+)
 
 
 def _safe(text):
@@ -410,17 +415,21 @@ def page_dashboard():
         events = get_all_live_events()
         reliefweb = fetch_reliefweb_disasters(50)
 
+    mine_events = get_mine_events()
+    ree_events = get_rare_earth_events()
+    all_events = events + mine_events + ree_events
+
     type_counts = {}
     severity_counts = {"Critical": 0, "High": 0, "Moderate": 0, "Low": 0}
-    for e in events:
+    for e in all_events:
         t = e.get("type", "Other")
         type_counts[t] = type_counts.get(t, 0) + 1
         s = e.get("severity", "Moderate")
         severity_counts[s] = severity_counts.get(s, 0) + 1
 
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
     with c1:
-        st.markdown(render_metric("Active Events", len(events), "red"), unsafe_allow_html=True)
+        st.markdown(render_metric("Live Events", len(events), "red"), unsafe_allow_html=True)
     with c2:
         st.markdown(render_metric("Critical", severity_counts.get("Critical", 0), "red"), unsafe_allow_html=True)
     with c3:
@@ -428,13 +437,16 @@ def page_dashboard():
     with c4:
         st.markdown(render_metric("Disaster Types", len(type_counts), "blue"), unsafe_allow_html=True)
     with c5:
-        st.markdown(render_metric("ReliefWeb Reports", len(reliefweb), "green"), unsafe_allow_html=True)
+        st.markdown(render_metric("Mine Sites", len(mine_events) + len(ree_events), "brown"), unsafe_allow_html=True)
+    with c6:
+        st.markdown(render_metric("ReliefWeb", len(reliefweb), "green"), unsafe_allow_html=True)
 
-    st.markdown('<div class="section-header"><h2>🗺️ Global Disaster Map</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>🗺️ Global Disaster + Mining Map</h2></div>', unsafe_allow_html=True)
 
+    all_types = sorted(type_counts.keys())
     filter_types = st.multiselect(
-        "Filter by disaster type",
-        options=sorted(type_counts.keys()),
+        "Filter by disaster/mine type (leave empty to show all)",
+        options=all_types,
         default=None,
         key="dash_filter"
     )
@@ -446,7 +458,7 @@ def page_dashboard():
     legend_html += '</div>'
     st.markdown(legend_html, unsafe_allow_html=True)
 
-    globe_html = create_rotating_globe_html(events, selected_types=filter_types if filter_types else None, height=580)
+    globe_html = create_rotating_globe_html(all_events, selected_types=filter_types if filter_types else None, height=580)
     components.html(globe_html, height=600, scrolling=False)
 
     col_left, col_right = st.columns([3, 2])
@@ -1253,6 +1265,186 @@ def page_resources():
                 """, unsafe_allow_html=True)
 
 
+def page_mining():
+    st.markdown('<h1 style="color:#1a66cc;">⛏️ Mining Disasters & Environmental Impacts</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#333333;">Global database of abandoned mines, active mining pits, and rare earth extraction sites causing environmental disasters. Sources: USGS MRDS, AML Inventories, EJAtlas, research literature.</p>', unsafe_allow_html=True)
+
+    tab_abandoned, tab_active, tab_ree, tab_map, tab_country = st.tabs([
+        "🏚️ Abandoned Mines", "⚙️ Active Mining Pits", "💎 Rare Earth Mines", "🗺️ Mine Map", "🔍 By Country"
+    ])
+
+    sev_order = {"Critical": 4, "High": 3, "Moderate": 2, "Low": 1}
+    sev_colors = {"Critical": "#cc0000", "High": "#cc5500", "Moderate": "#cc8800", "Low": "#448800"}
+
+    def render_mine_card(m, show_ree=False):
+        sev = m.get("severity", "Moderate")
+        sc = sev_colors.get(sev, "#888")
+        mineral = _safe(m.get("mineral", ""))
+        status = _safe(m.get("status", ""))
+        issue = _safe(m.get("issue", ""))
+        source = _safe(m.get("source", ""))
+        country = _safe(m.get("country", ""))
+        state_loc = _safe(m.get("state", ""))
+        year = m.get("year_abandoned")
+        prod = m.get("production_tpa")
+        res = m.get("reserves_mt")
+        extras = ""
+        if year:
+            extras += f" | Abandoned: {year}"
+        if prod:
+            extras += f" | Production: {prod:,} t/yr"
+        if res:
+            extras += f" | Reserves: {res} Mt"
+        loc_str = f"{state_loc}, {country}" if state_loc else country
+        st.markdown(f"""
+        <div class="resource-card" style="border-left:4px solid {sc}; margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <h4 style="margin:0 0 4px 0;">{_safe(m.get('name',''))}</h4>
+                <span style="color:{sc};font-weight:700;font-size:0.8rem;white-space:nowrap;margin-left:8px;">{sev}</span>
+            </div>
+            <div style="font-size:0.78rem;color:#555555;margin-bottom:4px;">📍 {loc_str} | 🪨 {mineral} | {status}{extras}</div>
+            <div style="font-size:0.83rem;color:#111111;line-height:1.4;margin-bottom:4px;">{issue}</div>
+            <div style="font-size:0.7rem;color:#1a66cc;">📚 {source}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tab_abandoned:
+        st.markdown(f'<div class="section-header"><h2>🏚️ Abandoned Mines — Global Inventory ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Abandoned")} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown("Data compiled from: USEPA Superfund, USGS MRDS, AML national inventories (Australia 50,000+, Canada 5,700+ Ontario, South Africa 6,000+), EJAtlas, research literature.")
+
+        region_filter = st.selectbox("Filter by region/continent", ["All", "North America", "South America", "Africa", "Europe", "Asia", "Oceania", "Middle East"], key="aband_region")
+        sev_filter = st.selectbox("Filter by severity", ["All", "Critical", "High", "Moderate", "Low"], key="aband_sev")
+
+        abandoned = [m for m in ABANDONED_MINES if m.get("status") == "Abandoned"]
+        if region_filter != "All":
+            region_map = {
+                "North America": ["United States", "Canada", "Mexico"],
+                "South America": ["Brazil", "Peru", "Chile", "Colombia", "Bolivia", "Argentina", "Venezuela", "Ecuador"],
+                "Africa": ["South Africa", "Ghana", "DR Congo", "Zambia", "Zimbabwe", "Nigeria", "Tanzania", "Mali", "Burkina Faso", "Morocco", "Malawi"],
+                "Europe": ["Romania", "Spain", "United Kingdom", "Germany", "Ukraine", "Poland"],
+                "Asia": ["India", "Indonesia", "Philippines", "Kyrgyzstan", "Uzbekistan", "Kazakhstan", "China", "Mongolia", "Myanmar", "Laos", "Vietnam", "Malaysia", "Japan"],
+                "Oceania": ["Australia", "Papua New Guinea"],
+                "Middle East": ["Oman", "Saudi Arabia", "Iran"],
+            }
+            allowed = region_map.get(region_filter, [])
+            abandoned = [m for m in abandoned if m.get("country") in allowed]
+        if sev_filter != "All":
+            abandoned = [m for m in abandoned if m.get("severity") == sev_filter]
+
+        abandoned = sorted(abandoned, key=lambda x: sev_order.get(x.get("severity", "Low"), 0), reverse=True)
+        st.markdown(f"**Showing {len(abandoned)} abandoned mine sites**")
+        for m in abandoned:
+            render_mine_card(m)
+
+    with tab_active:
+        st.markdown(f'<div class="section-header"><h2>⚙️ Active Mining Pits — Ongoing Environmental Impacts ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Active")} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown("Active mines with documented environmental issues: acid drainage, tailings failures, toxic emissions, water contamination, community displacement.")
+
+        active = [m for m in ABANDONED_MINES if m.get("status") == "Active"]
+        active = sorted(active, key=lambda x: sev_order.get(x.get("severity", "Low"), 0), reverse=True)
+        st.markdown(f"**Showing {len(active)} active mining sites with environmental concerns**")
+        for m in active:
+            render_mine_card(m)
+
+    with tab_ree:
+        st.markdown(f'<div class="section-header"><h2>💎 Rare Earth Mining Sites — Global ({len(RARE_EARTH_MINES)} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown("""**Rare Earth Elements (REE)** are critical for electronics, EVs, wind turbines, and defense. Mining causes severe environmental impacts:
+        radioactive thorium/uranium waste, acid mine drainage, groundwater contamination, and massive land destruction.
+        **China dominates ~70% of global production** (Bayan Obo, Jiangxi in-situ leach, Sichuan mines).
+        Sources: USGS REE Statistics, IAEA, ScienceDirect, Yale Environment 360, EJAtlas.""")
+
+        ree_sev = st.selectbox("Filter by severity", ["All", "Critical", "High", "Moderate", "Low"], key="ree_sev")
+        ree_status = st.selectbox("Filter by status", ["All", "Active", "Abandoned"], key="ree_status")
+
+        ree_display = list(RARE_EARTH_MINES)
+        if ree_sev != "All":
+            ree_display = [m for m in ree_display if m.get("severity") == ree_sev]
+        if ree_status != "All":
+            ree_display = [m for m in ree_display if m.get("status") == ree_status]
+        ree_display = sorted(ree_display, key=lambda x: sev_order.get(x.get("severity", "Low"), 0), reverse=True)
+
+        col_stats1, col_stats2, col_stats3, col_stats4 = st.columns(4)
+        with col_stats1:
+            st.metric("Total REE Sites", len(RARE_EARTH_MINES))
+        with col_stats2:
+            st.metric("Critical Sites", sum(1 for m in RARE_EARTH_MINES if m.get("severity") == "Critical"))
+        with col_stats3:
+            st.metric("Countries Affected", len(set(m.get("country") for m in RARE_EARTH_MINES)))
+        with col_stats4:
+            active_ree = sum(1 for m in RARE_EARTH_MINES if m.get("status") == "Active")
+            st.metric("Active Sites", active_ree)
+
+        st.markdown(f"**Showing {len(ree_display)} rare earth mine sites**")
+        for m in ree_display:
+            render_mine_card(m, show_ree=True)
+
+    with tab_map:
+        st.markdown('<div class="section-header"><h2>🗺️ Mine Locations on Global Map</h2></div>', unsafe_allow_html=True)
+        map_type = st.selectbox("Show mine type", ["All Mines", "Abandoned Mines Only", "Active Mines Only", "Rare Earth Mines Only"], key="mine_map_type")
+
+        all_mine_ev = get_mine_events() + get_rare_earth_events()
+        if map_type == "Abandoned Mines Only":
+            all_mine_ev = [e for e in all_mine_ev if e.get("type") == "Abandoned Mine"]
+        elif map_type == "Active Mines Only":
+            all_mine_ev = [e for e in all_mine_ev if e.get("type") == "Active Mine"]
+        elif map_type == "Rare Earth Mines Only":
+            all_mine_ev = [e for e in all_mine_ev if e.get("type") == "Rare Earth Mine"]
+
+        if all_mine_ev:
+            import folium
+            mine_map = folium.Map(location=[20, 10], zoom_start=2, tiles=None, prefer_canvas=True)
+            folium.TileLayer(
+                tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                attr='&copy; CARTO', name="Light", control=False
+            ).add_to(mine_map)
+            color_map = {"Abandoned Mine": "#8B4513", "Active Mine": "#ff6b35", "Rare Earth Mine": "#9b59b6"}
+            icon_map = {"Abandoned Mine": "☠️", "Active Mine": "⚙️", "Rare Earth Mine": "💎"}
+            for ev in all_mine_ev:
+                lat, lon = ev.get("lat", 0), ev.get("lon", 0)
+                if lat == 0 and lon == 0:
+                    continue
+                mtype = ev.get("type", "")
+                mcolor = color_map.get(mtype, "#888888")
+                popup_html = f"""
+                <div style='font-family:Courier New;min-width:220px;max-width:320px;'>
+                    <h4 style='color:{mcolor};margin:0 0 4px 0;'>{icon_map.get(mtype, "⛏️")} {_safe(ev.get('title',''))}</h4>
+                    <p style='margin:2px 0;font-size:0.8rem;'><b>{mtype}</b> | {_safe(ev.get('mineral',''))}</p>
+                    <p style='margin:2px 0;font-size:0.8rem;'>📍 {_safe(ev.get('country',''))} | Severity: <b style='color:{mcolor};'>{_safe(ev.get('severity',''))}</b></p>
+                    <p style='margin:4px 0;font-size:0.78rem;line-height:1.4;'>{_safe(ev.get('description','')[:200])}</p>
+                    <p style='margin:2px 0;font-size:0.7rem;color:#1a66cc;'>📚 {_safe(ev.get('source',''))}</p>
+                </div>"""
+                sev_radius_map = {"Critical": 10, "High": 7, "Moderate": 5, "Low": 3}
+                radius = sev_radius_map.get(ev.get("severity", "Moderate"), 5)
+                folium.CircleMarker(
+                    location=[lat, lon], radius=radius,
+                    color=mcolor, fill=True, fillColor=mcolor, fillOpacity=0.75, weight=1.5,
+                    popup=folium.Popup(popup_html, max_width=340),
+                    tooltip=f"{icon_map.get(mtype,'⛏️')} {ev.get('title','')} [{ev.get('severity','')}]"
+                ).add_to(mine_map)
+            from streamlit_folium import st_folium
+            st_folium(mine_map, width="100%", height=550)
+        else:
+            st.info("No mine sites to display for selected filter.")
+
+    with tab_country:
+        st.markdown('<div class="section-header"><h2>🔍 Mine Sites by Country</h2></div>', unsafe_allow_html=True)
+        all_countries = sorted(set(m.get("country", "") for m in ABANDONED_MINES + RARE_EARTH_MINES if m.get("country")))
+        sel_country = st.selectbox("Select country", all_countries, key="mine_country_select")
+        country_mines = get_mines_by_country(sel_country)
+        if country_mines:
+            st.markdown(f"**{len(country_mines)} mine sites documented for {sel_country}:**")
+            for m in country_mines:
+                render_mine_card(m)
+        else:
+            st.info(f"No mine site data available for {sel_country} in current database.")
+
+        st.markdown('<div class="section-header"><h2>⚠️ Top Critical Mine Sites Globally</h2></div>', unsafe_allow_html=True)
+        critical = get_critical_mines(limit=15)
+        st.markdown(f"**{len(critical)} critical-severity mine sites across all categories:**")
+        for m in critical:
+            render_mine_card(m)
+
+
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding:15px 0;">
@@ -1264,7 +1456,7 @@ with st.sidebar:
 
     page = st.radio(
         "Navigation",
-        ["🗺️ Dashboard", "🏳️ Country Analysis", "🚨 Live Alerts", "🌡️ Drought & Heatwave", "🆘 Resource Hub"],
+        ["🗺️ Dashboard", "🏳️ Country Analysis", "🚨 Live Alerts", "🌡️ Drought & Heatwave", "⛏️ Mining Disasters", "🆘 Resource Hub"],
         label_visibility="collapsed"
     )
 
@@ -1281,6 +1473,7 @@ with st.sidebar:
         landslide_count = sum(1 for e in quick_events if e.get("type") == "Landslide")
         drought_count = sum(1 for e in quick_events if e.get("type") == "Drought")
 
+        mine_total = len(ABANDONED_MINES) + len(RARE_EARTH_MINES)
         st.markdown(f"""
         <div style="font-size:0.9rem; color:#111111; font-weight:600;">
             <p>🔴 Earthquakes: <b style="color:#cc0000;">{eq_count}</b></p>
@@ -1290,6 +1483,7 @@ with st.sidebar:
             <p>🌋 Volcanoes: <b style="color:#cc4400;">{volc_count}</b></p>
             <p>🏔️ Landslides: <b style="color:#775522;">{landslide_count}</b></p>
             <p>☀️ Droughts: <b style="color:#aa6600;">{drought_count}</b></p>
+            <p>⛏️ Mine Sites: <b style="color:#8B4513;">{mine_total}</b></p>
         </div>
         """, unsafe_allow_html=True)
     except Exception:
@@ -1312,5 +1506,7 @@ elif "🚨 Live Alerts" in page:
     page_live_alerts()
 elif "🌡️ Drought & Heatwave" in page:
     page_drought_heatwave()
+elif "⛏️ Mining Disasters" in page:
+    page_mining()
 elif "🆘 Resource Hub" in page:
     page_resources()

@@ -19,6 +19,9 @@ DISASTER_COLORS = {
     "Dust/Haze": "#999966",
     "Water Quality": "#669999",
     "Sea/Lake Ice": "#aaddee",
+    "Abandoned Mine": "#8B4513",
+    "Active Mine": "#ff6b35",
+    "Rare Earth Mine": "#9b59b6",
 }
 
 DISASTER_ICONS = {
@@ -35,6 +38,9 @@ DISASTER_ICONS = {
     "Dust/Haze": "eye-close",
     "Water Quality": "tint",
     "Sea/Lake Ice": "asterisk",
+    "Abandoned Mine": "warning-sign",
+    "Active Mine": "cog",
+    "Rare Earth Mine": "star",
 }
 
 
@@ -45,6 +51,7 @@ def _folium_color(hex_color):
         "#cc8800": "orange", "#cc0000": "darkred", "#885500": "beige",
         "#88ccff": "lightblue", "#999966": "gray", "#669999": "cadetblue",
         "#aaddee": "lightblue",
+        "#8B4513": "darkred", "#ff6b35": "orange", "#9b59b6": "purple",
     }
     return cmap.get(hex_color, "blue")
 
@@ -193,7 +200,11 @@ def create_rotating_globe_html(events, selected_types=None, height=600):
     filtered = [e for e in filtered if not (e.get("lat", 0) == 0 and e.get("lon", 0) == 0)]
 
     if not filtered:
-        return f'<div style="height:{height}px;background:#0a0e17;display:flex;align-items:center;justify-content:center;color:#ffffff;font-family:Courier New;">No events to display</div>'
+        return f'<div style="height:{height}px;background:#000010;display:flex;align-items:center;justify-content:center;color:#ffffff;font-family:Courier New;">No events to display</div>'
+
+    # Cap at 800 points for performance; prioritise critical/high severity
+    sev_order = {"Critical": 4, "High": 3, "Moderate": 2, "Low": 1}
+    filtered = sorted(filtered, key=lambda e: sev_order.get(e.get("severity", "Low"), 0), reverse=True)[:800]
 
     points = []
     for e in filtered:
@@ -645,9 +656,8 @@ var cityLabels = [
   {{lat:42.9,lng:74.6,text:"Bishkek",tier:"city"}},
 ];
 
-var globe = Globe({{animateIn: false}})
+var globe = Globe({{animateIn: false, rendererConfig: {{antialias: false, precision: 'lowp'}}}})
   .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-  .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
   .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
   .pointsData(pointsData)
   .pointLat('lat')
@@ -655,9 +665,10 @@ var globe = Globe({{animateIn: false}})
   .pointColor('color')
   .pointRadius('radius')
   .pointAltitude('altitude')
+  .pointResolution(4)
   .pointsMerge(false)
   .pointLabel(function(d){{
-    return '<div style="background:rgba(10,14,23,0.9);border:1px solid #4fc3f7;border-radius:6px;padding:6px 10px;color:#fff;font-family:Courier New;font-size:11px;max-width:220px;">' + d.label + '</div>';
+    return '<div style="background:rgba(10,14,23,0.92);border:1px solid #4fc3f7;border-radius:6px;padding:5px 9px;color:#fff;font-family:Courier New;font-size:11px;max-width:200px;">' + d.label + '</div>';
   }})
   .onPointClick(function(d){{
     document.getElementById('popup-content').innerHTML = d.popup;
@@ -667,38 +678,45 @@ var globe = Globe({{animateIn: false}})
   .labelLat('lat')
   .labelLng('lng')
   .labelText('text')
-  .labelSize(function(d){{ return d.tier === 'country' ? 0.8 : d.tier === 'state' ? 0.55 : 0.4; }})
+  .labelSize(function(d){{ return d.tier === 'country' ? 0.7 : d.tier === 'state' ? 0.5 : 0.35; }})
   .labelColor(function(d){{ return d.tier === 'country' ? 'rgba(255,220,100,0.95)' : d.tier === 'state' ? 'rgba(180,220,255,0.9)' : 'rgba(200,200,200,0.85)'; }})
-  .labelResolution(2)
+  .labelResolution(1)
   .labelAltitude(0.001)
   .labelDotRadius(0)
   (document.getElementById('globeViz'));
 
-globe.controls().autoRotate = true;
-globe.controls().autoRotateSpeed = 0.4;
-globe.controls().enableZoom = true;
-globe.controls().minDistance = 120;
-globe.controls().maxDistance = 600;
+var ctrl = globe.controls();
+ctrl.autoRotate = true;
+ctrl.autoRotateSpeed = 1.8;
+ctrl.enableZoom = true;
+ctrl.enableDamping = true;
+ctrl.dampingFactor = 0.15;
+ctrl.rotateSpeed = 1.4;
+ctrl.zoomSpeed = 1.6;
+ctrl.minDistance = 110;
+ctrl.maxDistance = 580;
 globe.pointOfView({{altitude: 2.5}}, 0);
 
+var labelUpdateTimer = null;
 function updateLabels() {{
-  var dist = globe.camera().position.length();
-  var labels;
-  if (dist < 160) {{
-    labels = countryLabels.concat(stateLabels).concat(cityLabels);
-  }} else if (dist < 280) {{
-    labels = countryLabels.concat(stateLabels);
-  }} else {{
-    labels = countryLabels;
-  }}
-  globe.labelsData(labels);
+  clearTimeout(labelUpdateTimer);
+  labelUpdateTimer = setTimeout(function() {{
+    var dist = globe.camera().position.length();
+    if (dist < 155) {{
+      globe.labelsData(countryLabels.concat(stateLabels).concat(cityLabels));
+    }} else if (dist < 270) {{
+      globe.labelsData(countryLabels.concat(stateLabels));
+    }} else {{
+      globe.labelsData(countryLabels);
+    }}
+  }}, 80);
 }}
 
-globe.controls().addEventListener('change', updateLabels);
+ctrl.addEventListener('change', updateLabels);
 
 function toggleRotation() {{
   rotating = !rotating;
-  globe.controls().autoRotate = rotating;
+  ctrl.autoRotate = rotating;
   document.getElementById('rotation-status').innerHTML = rotating ? '&#10227; Rotating' : '&#9208; Paused';
 }}
 </script>

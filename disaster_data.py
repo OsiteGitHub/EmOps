@@ -140,7 +140,8 @@ COUNTRY_STATES = {
 
 DISASTER_TYPES = [
     "Earthquake", "Flood", "Storm", "Wildfire", "Volcanic Eruption",
-    "Tsunami", "Drought", "Extreme Temperature", "Landslide"
+    "Tsunami", "Drought", "Extreme Temperature", "Landslide",
+    "Abandoned Mine", "Active Mine", "Rare Earth Mine"
 ]
 
 
