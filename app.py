@@ -35,21 +35,6 @@ from mine_data import (
 )
 
 
-def e3d(emoji_char: str, size: int = 38) -> str:
-    """Return an inline <img> tag for a 3D animated emoji from Google's Noto Emoji set."""
-    cp = "_".join(
-        f"{ord(c):x}" for c in emoji_char if ord(c) not in (0xFE0F, 0x200D)
-    )
-    url = f"https://fonts.gstatic.com/s/e/notoemoji/latest/{cp}/512.gif"
-    return (
-        f'<img src="{url}" '
-        f'style="height:{size}px;width:{size}px;vertical-align:-0.30em;'
-        f'display:inline-block;margin-right:12px;object-fit:contain;'
-        f'image-rendering:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.45));" '
-        f'alt="{emoji_char}" />'
-    )
-
-
 def _safe(text):
     if text is None:
         return ""
@@ -846,7 +831,7 @@ def page_dashboard():
     with c5:
         st.markdown(render_metric("Mine Sites", len(mine_events) + len(ree_events), "brown"), unsafe_allow_html=True)
 
-    st.markdown(f'<div class="section-header"><h2>{e3d("🗺️")} Global Disaster + Mining Map</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>🗺️ Global Disaster + Mining Map</h2></div>', unsafe_allow_html=True)
 
     all_types = sorted(type_counts.keys())
     filter_types = st.multiselect(
@@ -866,7 +851,7 @@ def page_dashboard():
     gmap = create_global_map(all_events, selected_types=filter_types if filter_types else None, height=580)
     st_folium(gmap, width=None, height=560, returned_objects=[])
 
-    st.markdown(f'<div class="section-header"><h2>{e3d("🚨")} Latest Alerts</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>🚨 Latest Alerts</h2></div>', unsafe_allow_html=True)
     sev_rank = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
     sorted_events = sorted(
         all_events,
@@ -884,7 +869,7 @@ def page_dashboard():
             with alert_cols[idx]:
                 st.markdown(render_alert_card(event), unsafe_allow_html=True)
 
-    st.markdown(f'<div class="section-header"><h2>{e3d("📊")} Event Distribution</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>📊 Event Distribution</h2></div>', unsafe_allow_html=True)
     if type_counts:
         df_types = pd.DataFrame(list(type_counts.items()), columns=["Type", "Count"])
         df_types = df_types.sort_values("Count", ascending=True)
@@ -906,7 +891,7 @@ def page_dashboard():
         )
         st.plotly_chart(fig, width="stretch")
 
-    st.markdown(f'<div class="section-header"><h2>{e3d("📋")} Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header"><h2>📋 Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
 
     dr_tab1, dr_tab2, dr_tab3 = st.tabs(["📰 News & Situation Reports", "📚 Research Publications", "🌴 Tropical Focus"])
 
@@ -1091,7 +1076,7 @@ def page_country_analysis():
                 </div>
                 """, unsafe_allow_html=True)
 
-        st.markdown(f'<div class="section-header"><h2>{e3d("📰")} Disaster History — {_safe(country)}</h2></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header"><h2>📰 Disaster History — {_safe(country)}</h2></div>', unsafe_allow_html=True)
         country_hist = get_country_disasters(country, limit=20)
         if country_hist:
             st.markdown(f"**{len(country_hist)} historical disaster situation reports for {country}:**")
@@ -1112,7 +1097,7 @@ def page_country_analysis():
         else:
             st.info(f"No historical disaster situation reports available for {country}.")
 
-        st.markdown(f'<div class="section-header"><h2>{e3d("📚")} Research Publications — {_safe(country)}</h2></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header"><h2>📚 Research Publications — {_safe(country)}</h2></div>', unsafe_allow_html=True)
         country_research = get_country_research(country, limit=10)
         if country_research:
             st.markdown(f"**{len(country_research)} academic publications referencing {country}:**")
@@ -1421,7 +1406,7 @@ def page_drought_heatwave():
             st.info(f"🟢 {monitor_country} has a **MODERATE** combined drought and heat risk ({combined:.1f}/10).")
 
     with tab_help:
-        st.markdown(f'<div class="section-header"><h2>{e3d("💧")} Water Conservation & Drought Survival</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>💧 Water Conservation & Drought Survival</h2></div>', unsafe_allow_html=True)
 
         st.markdown("### Water-Saving Tips")
         for i, tip in enumerate(DROUGHT_RESOURCES["water_tips"]):
@@ -1442,7 +1427,7 @@ def page_drought_heatwave():
                 """, unsafe_allow_html=True)
 
     with tab_crops:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🌾")} Drought-Resistant Crops</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>🌾 Drought-Resistant Crops</h2></div>', unsafe_allow_html=True)
         st.markdown("These crops are recommended for regions experiencing drought or water scarcity:")
 
         for crop_info in DROUGHT_RESOURCES["crop_advice"]:
@@ -1457,7 +1442,7 @@ def page_drought_heatwave():
             """, unsafe_allow_html=True)
 
     with tab_water:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🏗️")} Community Rainwater Harvesting</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>🏗️ Community Rainwater Harvesting</h2></div>', unsafe_allow_html=True)
         st.markdown("Proven techniques for capturing and storing rainwater:")
 
         for i, technique in enumerate(DROUGHT_RESOURCES["harvesting_tips"]):
@@ -1497,7 +1482,7 @@ def page_resources():
                 """, unsafe_allow_html=True)
 
     with tab_shelters:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🏠")} Shelter & Water Point Locator</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>🏠 Shelter & Water Point Locator</h2></div>', unsafe_allow_html=True)
         st.markdown("Find emergency shelters, water points, and aid resources during disasters.")
 
         sh_col1, sh_col2 = st.columns(2)
@@ -1522,7 +1507,7 @@ def page_resources():
                 </div>
                 """, unsafe_allow_html=True)
 
-        st.markdown(f'<div class="section-header"><h2>{e3d("📍")} Locate Resources on Map</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>📍 Locate Resources on Map</h2></div>', unsafe_allow_html=True)
         shelter_country = st.selectbox("Select your country", sorted(COUNTRIES.keys()), key="shelter_country")
         s_info = COUNTRIES.get(shelter_country, {})
         s_lat, s_lon = s_info.get("lat", 0), s_info.get("lon", 0)
@@ -1606,7 +1591,7 @@ def page_resources():
             """, unsafe_allow_html=True)
 
     with tab_report:
-        st.markdown(f'<div class="section-header"><h2>{e3d("📝")} Community Disaster Reporting</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>📝 Community Disaster Reporting</h2></div>', unsafe_allow_html=True)
         st.markdown("Report a disaster event in your area to help the community. Your report helps improve situational awareness and response coordination.")
 
         with st.form("disaster_report_form", clear_on_submit=True):
@@ -1705,7 +1690,7 @@ def page_mining():
         """, unsafe_allow_html=True)
 
     with tab_abandoned:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🏚️")} Abandoned Mines — Global Inventory ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Abandoned")} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header"><h2>🏚️ Abandoned Mines — Global Inventory ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Abandoned")} sites)</h2></div>', unsafe_allow_html=True)
         st.markdown("Data compiled from: USEPA Superfund, USGS MRDS, AML national inventories (Australia 50,000+, Canada 5,700+ Ontario, South Africa 6,000+), EJAtlas, research literature.")
 
         region_filter = st.selectbox("Filter by region/continent", ["All", "North America", "South America", "Africa", "Europe", "Asia", "Oceania", "Middle East"], key="aband_region")
@@ -1733,7 +1718,7 @@ def page_mining():
             render_mine_card(m)
 
     with tab_active:
-        st.markdown(f'<div class="section-header"><h2>{e3d("⚙️")} Active Mining Pits — Ongoing Environmental Impacts ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Active")} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header"><h2>⚙️ Active Mining Pits — Ongoing Environmental Impacts ({sum(1 for m in ABANDONED_MINES if m.get("status")=="Active")} sites)</h2></div>', unsafe_allow_html=True)
         st.markdown("Active mines with documented environmental issues: acid drainage, tailings failures, toxic emissions, water contamination, community displacement.")
 
         active = [m for m in ABANDONED_MINES if m.get("status") == "Active"]
@@ -1743,7 +1728,7 @@ def page_mining():
             render_mine_card(m)
 
     with tab_ree:
-        st.markdown(f'<div class="section-header"><h2>{e3d("💎")} Rare Earth Mining Sites — Global ({len(RARE_EARTH_MINES)} sites)</h2></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header"><h2>💎 Rare Earth Mining Sites — Global ({len(RARE_EARTH_MINES)} sites)</h2></div>', unsafe_allow_html=True)
         st.markdown("""**Rare Earth Elements (REE)** are critical for electronics, EVs, wind turbines, and defense. Mining causes severe environmental impacts:
         radioactive thorium/uranium waste, acid mine drainage, groundwater contamination, and massive land destruction.
         **China dominates ~70% of global production** (Bayan Obo, Jiangxi in-situ leach, Sichuan mines).
@@ -1775,7 +1760,7 @@ def page_mining():
             render_mine_card(m, show_ree=True)
 
     with tab_map:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🗺️")} Mine Locations on Global Map</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>🗺️ Mine Locations on Global Map</h2></div>', unsafe_allow_html=True)
         map_type = st.selectbox("Show mine type", ["All Mines", "Abandoned Mines Only", "Active Mines Only", "Rare Earth Mines Only"], key="mine_map_type")
 
         all_mine_ev = get_mine_events() + get_rare_earth_events()
@@ -1823,7 +1808,7 @@ def page_mining():
             st.info("No mine sites to display for selected filter.")
 
     with tab_country:
-        st.markdown(f'<div class="section-header"><h2>{e3d("🔍")} Mine Sites by Country</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>🔍 Mine Sites by Country</h2></div>', unsafe_allow_html=True)
         all_countries = sorted(set(m.get("country", "") for m in ABANDONED_MINES + RARE_EARTH_MINES if m.get("country")))
         sel_country = st.selectbox("Select country", all_countries, key="mine_country_select")
         country_mines = get_mines_by_country(sel_country)
@@ -1834,7 +1819,7 @@ def page_mining():
         else:
             st.info(f"No mine site data available for {sel_country} in current database.")
 
-        st.markdown(f'<div class="section-header"><h2>{e3d("⚠️")} Top Critical Mine Sites Globally</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header"><h2>⚠️ Top Critical Mine Sites Globally</h2></div>', unsafe_allow_html=True)
         critical = get_critical_mines(limit=15)
         st.markdown(f"**{len(critical)} critical-severity mine sites across all categories:**")
         for m in critical:
