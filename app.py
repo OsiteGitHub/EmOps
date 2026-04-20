@@ -60,9 +60,36 @@ st.set_page_config(
 )
 
 CUSTOM_CSS = """
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    * {
-        font-family: 'Courier New', Courier, monospace !important;
+    /* ─── Design tokens ─────────────────────────────────────── */
+    :root {
+        --ink: #000000;
+        --paper: #ffffff;
+        --muted: #6F6F6F;
+        --line: #ECECEC;
+        --soft: #F7F7F7;
+        --serif: 'Instrument Serif', 'Georgia', serif;
+        --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ─── Base typography ──────────────────────────────────── */
+    html, body, [class*="css"], .stApp, p, span, div, li, label, button, input, textarea, select {
+        font-family: var(--sans) !important;
+    }
+
+    h1, h2, h3, h4, .display, .serif {
+        font-family: var(--serif) !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+
+    .stApp {
+        background-color: var(--paper);
+        color: var(--ink);
     }
 
     .material-icons,
@@ -75,61 +102,68 @@ CUSTOM_CSS = """
         font-family: 'Material Icons' !important;
     }
 
-    .stApp {
-        background-color: #ffffff;
-        color: #111111;
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    /* Reduce default top padding of main content area */
+    /* ─── Layout polish ─────────────────────────────────────── */
     .stMainBlockContainer,
     div[data-testid="stMainBlockContainer"],
     .block-container {
         padding-top: 2rem !important;
+        max-width: 1280px;
     }
 
+    header[data-testid="stHeader"] {
+        background-color: transparent;
+    }
+
+    /* ─── Sidebar — minimal editorial ───────────────────────── */
     section[data-testid="stSidebar"] {
-        background-color: #f0f0f0;
-        border-right: 1px solid #cccccc;
+        background-color: #FAFAFA;
+        border-right: 1px solid var(--line);
     }
 
     section[data-testid="stSidebar"] .stMarkdown h1,
     section[data-testid="stSidebar"] .stMarkdown h2,
     section[data-testid="stSidebar"] .stMarkdown h3,
     section[data-testid="stSidebar"] .stMarkdown h4 {
-        color: #111111;
-        font-weight: 700;
+        color: var(--ink);
+        font-family: var(--serif) !important;
+        font-weight: 400;
     }
 
     section[data-testid="stSidebar"] .stRadio label,
     section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label,
-    section[data-testid="stSidebar"] .stRadio label p,
-    section[data-testid="stSidebar"] .stRadio label span,
-    section[data-testid="stSidebar"] .stRadio label div,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label span,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div,
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] label {
-        color: #111111 !important;
-        font-weight: 700 !important;
+        color: var(--ink) !important;
+        font-family: var(--sans) !important;
+        font-weight: 500 !important;
+        font-size: 0.92rem !important;
+        letter-spacing: 0.01em;
+    }
+
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+        transition: background 0.18s, color 0.18s;
+        margin-bottom: 2px !important;
+    }
+
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
+        background: #EFEFEF !important;
     }
 
     section[data-testid="stSidebar"] hr {
-        border-color: #bbbbbb !important;
-        opacity: 0.8;
+        border-color: var(--line) !important;
+        opacity: 1;
     }
 
-    /* Hide native sidebar toggle arrows — keep in normal flow so click() works */
+    /* Hide native sidebar toggle + three-dot menu */
     [data-testid="stSidebarCollapseButton"],
     [data-testid="collapsedControl"] {
         opacity: 0 !important;
         pointer-events: none !important;
     }
-
-    /* Hide the three-dot header menu entirely */
     #MainMenu,
     [data-testid="stMainMenu"],
     header [data-testid="stToolbar"],
@@ -139,197 +173,390 @@ CUSTOM_CSS = """
         visibility: hidden !important;
     }
 
-    .metric-card {
-        background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
-        border: 1px solid #c8d8f0;
-        border-radius: 12px;
-        padding: 20px;
+    /* ─── Animations: fade-rise ─────────────────────────────── */
+    @keyframes fadeRise {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-rise        { animation: fadeRise 0.8s ease-out both; }
+    .fade-rise-d1     { animation: fadeRise 0.8s ease-out 0.2s both; }
+    .fade-rise-d2     { animation: fadeRise 0.8s ease-out 0.4s both; }
+    .fade-rise-d3     { animation: fadeRise 0.8s ease-out 0.6s both; }
+
+    /* ─── Page header (editorial style) ─────────────────────── */
+    .page-header {
         text-align: center;
+        margin: 16px 0 48px 0;
+    }
+    .page-header .eyebrow {
+        font-family: var(--sans);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--muted);
+        margin-bottom: 18px;
+    }
+    .page-header h1.display {
+        font-family: var(--serif) !important;
+        font-size: clamp(2.6rem, 5.5vw, 4.6rem);
+        line-height: 1;
+        letter-spacing: -0.035em;
+        color: var(--ink);
+        margin: 0 0 18px 0;
+        font-weight: 400 !important;
+    }
+    .page-header h1.display em {
+        color: var(--muted);
+        font-style: italic;
+    }
+    .page-header p.lede {
+        font-family: var(--sans);
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 640px;
+        margin: 0 auto;
+        line-height: 1.55;
+    }
+
+    /* ─── Section header (minimal rule) ─────────────────────── */
+    .section-header {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 12px 0;
+        margin: 56px 0 24px 0;
+        border-radius: 0;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .section-header h2 {
+        color: var(--ink);
+        margin: 0;
+        font-family: var(--serif) !important;
+        font-size: 1.85rem;
+        font-weight: 400 !important;
+        letter-spacing: -0.02em;
+    }
+
+    /* ─── Metric cards ──────────────────────────────────────── */
+    .metric-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px 18px;
+        text-align: left;
         margin-bottom: 10px;
-        min-height: 110px;
+        min-height: 120px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        align-items: flex-start;
+        justify-content: space-between;
         box-sizing: border-box;
+        transition: border-color 0.2s, transform 0.2s;
     }
-
+    .metric-card:hover {
+        border-color: #BDBDBD;
+        transform: translateY(-2px);
+    }
     .metric-card h3 {
-        color: #333333;
-        font-size: 0.8rem;
+        color: var(--muted);
+        font-family: var(--sans) !important;
+        font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.18em;
         margin: 0;
+        font-weight: 500 !important;
     }
-
     .metric-card .value {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 5px 0;
+        font-family: var(--serif) !important;
+        font-size: 2.6rem;
+        font-weight: 400;
+        margin: 0;
+        line-height: 1;
+        color: var(--ink);
+        letter-spacing: -0.02em;
     }
+    .metric-card .value.red,
+    .metric-card .value.orange,
+    .metric-card .value.blue,
+    .metric-card .value.green,
+    .metric-card .value.yellow,
+    .metric-card .value.brown { color: var(--ink); }
 
-    .metric-card .value.red { color: #cc2222; }
-    .metric-card .value.orange { color: #cc6600; }
-    .metric-card .value.blue { color: #1a66cc; }
-    .metric-card .value.green { color: #228855; }
-    .metric-card .value.yellow { color: #aa8800; }
-    .metric-card .value.brown { color: #7a4f2a; }
-
+    /* ─── Alert cards ───────────────────────────────────────── */
     .alert-card {
-        background: #f8f9fa;
-        border-left: 4px solid;
-        border-radius: 0 8px 8px 0;
-        padding: 12px 16px;
-        margin-bottom: 8px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-left: 3px solid;
+        border-radius: 4px 12px 12px 4px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        transition: background 0.18s;
     }
-
-    .alert-critical { border-color: #cc2222; }
-    .alert-high { border-color: #cc6600; }
-    .alert-moderate { border-color: #aa8800; }
-    .alert-low { border-color: #228855; }
-
+    .alert-card:hover { background: var(--soft); }
+    .alert-critical { border-left-color: #000000; }
+    .alert-high     { border-left-color: #4D4D4D; }
+    .alert-moderate { border-left-color: #999999; }
+    .alert-low      { border-left-color: #CCCCCC; }
     .alert-card .alert-type {
-        font-size: 0.75rem;
+        font-family: var(--sans);
+        font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.18em;
         font-weight: 600;
+        color: var(--muted) !important;
     }
-
+    .alert-card .alert-type::before { content: "" !important; }
     .alert-card .alert-title {
-        font-size: 0.95rem;
-        color: #111111;
-        margin: 4px 0;
+        font-family: var(--serif) !important;
+        font-size: 1.05rem;
+        color: var(--ink);
+        margin: 6px 0 4px 0;
+        line-height: 1.3;
     }
-
     .alert-card .alert-time {
+        font-family: var(--sans);
         font-size: 0.75rem;
-        color: #333333;
+        color: var(--muted);
     }
 
+    /* ─── Resource cards ────────────────────────────────────── */
+    .resource-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+        margin-bottom: 14px;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+    .resource-card:hover { border-color: #BDBDBD; transform: translateY(-2px); }
+    .resource-card h4 {
+        color: var(--ink);
+        font-family: var(--serif) !important;
+        margin: 0 0 10px 0;
+        font-size: 1.1rem;
+        font-weight: 400 !important;
+    }
+    .resource-card p {
+        color: var(--muted);
+        font-family: var(--sans);
+        font-size: 0.85rem;
+        margin: 3px 0;
+        line-height: 1.5;
+    }
+
+    /* ─── Risk bar ──────────────────────────────────────────── */
     .risk-bar {
-        background: #dddddd;
-        border-radius: 6px;
-        height: 12px;
+        background: var(--line);
+        border-radius: 999px;
+        height: 6px;
         overflow: hidden;
-        margin: 4px 0;
+        margin: 6px 0;
     }
-
     .risk-fill {
         height: 100%;
-        border-radius: 6px;
-        transition: width 0.5s ease;
+        border-radius: 999px;
+        background: var(--ink) !important;
+        transition: width 0.6s ease;
     }
 
-    .section-header {
-        background: linear-gradient(90deg, #e8f0fe, transparent);
-        border-left: 3px solid #1a66cc;
-        padding: 10px 16px;
-        margin: 20px 0 15px 0;
-        border-radius: 0 8px 8px 0;
-    }
-
-    .section-header h2 {
-        color: #1a66cc;
-        margin: 0;
-        font-size: 1.2rem;
-    }
-
-    .resource-card {
-        background: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        padding: 16px;
-        margin-bottom: 10px;
-    }
-
-    .resource-card h4 {
-        color: #1a66cc;
-        margin: 0 0 8px 0;
-    }
-
-    .resource-card p {
-        color: #111111;
-        font-size: 0.85rem;
-        margin: 2px 0;
-    }
-
-    div[data-testid="stExpander"] {
-        background-color: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-    }
-
+    /* ─── Tabs ──────────────────────────────────────────────── */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 0;
+        border-bottom: 1px solid var(--line);
     }
-
     .stTabs [data-baseweb="tab"] {
-        background-color: #f0f0f0;
-        border: 1px solid #cccccc;
-        border-radius: 8px 8px 0 0;
-        color: #333333;
-        padding: 8px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        color: var(--muted);
+        padding: 12px 22px;
+        font-family: var(--sans) !important;
+        font-weight: 500;
+        font-size: 0.88rem;
     }
-
     .stTabs [aria-selected="true"] {
-        background-color: #e8f0fe;
-        color: #1a66cc;
-        border-color: #1a66cc;
+        background: transparent;
+        color: var(--ink);
+        border-bottom: 2px solid var(--ink);
     }
 
-    .evac-step {
-        background: #f0f4ff;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin: 4px 0;
-        border-left: 3px solid #1a66cc;
-        color: #111111;
+    /* ─── Expanders ─────────────────────────────────────────── */
+    div[data-testid="stExpander"] {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 14px;
     }
 
+    /* ─── Buttons (rounded-full, ink) ───────────────────────── */
+    .stButton > button,
+    .stDownloadButton > button {
+        background: var(--ink) !important;
+        color: var(--paper) !important;
+        border: 1px solid var(--ink) !important;
+        border-radius: 999px !important;
+        padding: 10px 26px !important;
+        font-family: var(--sans) !important;
+        font-weight: 500 !important;
+        font-size: 0.88rem !important;
+        letter-spacing: 0.01em;
+        transition: transform 0.18s, background 0.18s !important;
+        box-shadow: none !important;
+    }
+    .stButton > button:hover,
+    .stDownloadButton > button:hover {
+        transform: scale(1.03);
+        background: #1a1a1a !important;
+        color: var(--paper) !important;
+    }
+    .stButton > button[kind="secondary"] {
+        background: var(--paper) !important;
+        color: var(--ink) !important;
+        border: 1px solid var(--ink) !important;
+    }
+
+    /* ─── Inputs ────────────────────────────────────────────── */
+    .stSelectbox > div > div,
+    .stMultiSelect > div > div,
+    .stTextInput > div > div,
+    .stNumberInput > div > div {
+        background: var(--paper) !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 12px !important;
+        color: var(--ink) !important;
+    }
+
+    /* ─── Streamlit native metric ───────────────────────────── */
     div[data-testid="stMetric"] {
-        background-color: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        padding: 15px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px;
     }
-
     div[data-testid="stMetric"] label {
-        color: #333333;
+        color: var(--muted);
+        font-family: var(--sans) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.7rem;
     }
-
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
-        color: #1a66cc;
+        color: var(--ink);
+        font-family: var(--serif) !important;
+        font-weight: 400;
     }
 
-    .stSelectbox > div > div {
-        background-color: #f8f9fa;
-        border-color: #cccccc;
-        color: #111111;
+    /* ─── Evac steps ────────────────────────────────────────── */
+    .evac-step {
+        background: var(--soft);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin: 6px 0;
+        border-left: 2px solid var(--ink);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 0.92rem;
     }
 
-    .stMultiSelect > div > div {
-        background-color: #f8f9fa;
-        border-color: #cccccc;
-    }
-
-    header[data-testid="stHeader"] {
-        background-color: #ffffff;
-    }
-
+    /* ─── Legend ────────────────────────────────────────────── */
     .legend-item {
         display: inline-block;
-        margin-right: 15px;
-        font-size: 0.8rem;
+        margin-right: 18px;
+        font-size: 0.78rem;
+        font-family: var(--sans);
+        color: var(--muted);
     }
-
     .legend-dot {
         display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        margin-right: 4px;
+        margin-right: 6px;
         vertical-align: middle;
     }
+
+    /* ─── Cinematic hero ────────────────────────────────────── */
+    .hero-wrap {
+        position: relative;
+        width: 100%;
+        min-height: 78vh;
+        overflow: hidden;
+        border-radius: 24px;
+        margin: 0 0 48px 0;
+        background: var(--paper);
+    }
+    .hero-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 35%, rgba(255,255,255,0.55) 100%);
+        z-index: 1;
+    }
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 14vh 6vw 10vh;
+        text-align: center;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .hero-eyebrow {
+        font-family: var(--sans);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.28em;
+        color: var(--ink);
+        opacity: 0.7;
+        margin-bottom: 22px;
+    }
+    .hero-headline {
+        font-family: var(--serif) !important;
+        font-weight: 400;
+        font-size: clamp(2.8rem, 7vw, 6.2rem);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+        color: var(--ink);
+        margin: 0 auto 28px auto;
+        max-width: 18ch;
+    }
+    .hero-headline em {
+        color: var(--muted);
+        font-style: italic;
+    }
+    .hero-desc {
+        font-family: var(--sans);
+        font-size: 1.05rem;
+        color: var(--ink);
+        opacity: 0.75;
+        max-width: 540px;
+        margin: 0 auto 36px auto;
+        line-height: 1.6;
+    }
+    .hero-cta {
+        display: inline-block;
+        background: var(--ink);
+        color: var(--paper) !important;
+        text-decoration: none !important;
+        border-radius: 999px;
+        padding: 16px 42px;
+        font-family: var(--sans);
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        transition: transform 0.2s ease;
+    }
+    .hero-cta:hover { transform: scale(1.04); }
 
     /* ── Main menu (⋮ three-dots) popup ─────────────────────── */
     [data-baseweb="popover"] {
@@ -533,13 +760,64 @@ def render_risk_bar(name, score, max_score=10):
 
 
 def page_dashboard():
-    st.markdown("""
-    <div style="text-align:center; margin-top:0; margin-bottom:20px;">
-        <h1 style="color:#111111; font-size:3rem; margin:0 0 4px 0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
-        <h2 style="color:#111111; font-size:1.4rem; margin:0 0 8px 0; font-weight:600;">Global Disaster Resilience Monitor</h2>
-        <p style="color:#555555; font-size:0.95rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
+    components.html("""
+    <div class="hero-wrap">
+        <video id="heroVid" class="hero-video" muted playsinline preload="auto" autoplay
+               src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow fade-rise">EmOps&nbsp;&nbsp;·&nbsp;&nbsp;Global Resilience Intelligence</div>
+            <h1 class="hero-headline fade-rise-d1">Beyond <em>silence,</em><br>we build <em>resilience.</em></h1>
+            <p class="hero-desc fade-rise-d2">Real-time disaster tracking, risk assessment, and response intelligence for brilliant minds, fearless responders, and thoughtful planners.</p>
+            <a class="hero-cta fade-rise-d3" href="#dashboard-content">Begin Journey</a>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+        :root { --ink:#000; --paper:#fff; --muted:#6F6F6F; --serif:'Instrument Serif',Georgia,serif; --sans:'Inter',sans-serif; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:var(--paper); font-family:var(--sans); }
+        .hero-wrap { position:relative; width:100%; min-height:78vh; overflow:hidden; border-radius:24px; background:var(--paper); }
+        .hero-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; transition:opacity 0.5s ease; }
+        .hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 35%, rgba(255,255,255,0.55) 100%); z-index:1; }
+        .hero-content { position:relative; z-index:2; padding:14vh 6vw 10vh; text-align:center; max-width:1100px; margin:0 auto; }
+        .hero-eyebrow { font-family:var(--sans); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.28em; color:var(--ink); opacity:0.7; margin-bottom:22px; }
+        .hero-headline { font-family:var(--serif); font-weight:400; font-size:clamp(2.8rem,7vw,6.2rem); line-height:0.96; letter-spacing:-0.04em; color:var(--ink); margin:0 auto 28px auto; max-width:18ch; }
+        .hero-headline em { color:var(--muted); font-style:italic; }
+        .hero-desc { font-family:var(--sans); font-size:1.05rem; color:var(--ink); opacity:0.78; max-width:560px; margin:0 auto 36px auto; line-height:1.6; }
+        .hero-cta { display:inline-block; background:var(--ink); color:var(--paper); text-decoration:none; border-radius:999px; padding:16px 42px; font-family:var(--sans); font-size:0.95rem; font-weight:500; letter-spacing:0.02em; transition:transform 0.2s ease; }
+        .hero-cta:hover { transform:scale(1.04); }
+        @keyframes fadeRise { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+        .fade-rise    { animation:fadeRise 0.9s ease-out both; }
+        .fade-rise-d1 { animation:fadeRise 0.9s ease-out 0.2s both; }
+        .fade-rise-d2 { animation:fadeRise 0.9s ease-out 0.4s both; }
+        .fade-rise-d3 { animation:fadeRise 0.9s ease-out 0.6s both; }
+    </style>
+    <script>
+    (function() {
+      var v = document.getElementById('heroVid');
+      if (!v) return;
+      var fade = 0.5;
+      function tick() {
+        if (v.duration && !isNaN(v.duration) && v.duration > 0) {
+          var t = v.currentTime, d = v.duration;
+          if (t < fade)            v.style.opacity = (t / fade).toFixed(3);
+          else if (t > d - fade)   v.style.opacity = ((d - t) / fade).toFixed(3);
+          else                     v.style.opacity = '1';
+        }
+        requestAnimationFrame(tick);
+      }
+      v.addEventListener('ended', function() {
+        v.style.opacity = '0';
+        setTimeout(function() { v.currentTime = 0; v.play().catch(function(){}); }, 100);
+      });
+      v.play().catch(function(){});
+      requestAnimationFrame(tick);
+    })();
+    </script>
+    """, height=640)
+    st.markdown('<div id="dashboard-content"></div>', unsafe_allow_html=True)
 
     with st.spinner("Loading live disaster data..."):
         events = get_all_live_events()
@@ -697,7 +975,13 @@ def page_dashboard():
 
 
 def page_country_analysis():
-    st.markdown('<h1 style="color:#1a66cc;">🏳️ Country Disaster Analysis</h1>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="page-header fade-rise">
+        <div class="eyebrow">Regional Intelligence</div>
+        <h1 class="display">Country <em>Disaster</em> Analysis</h1>
+        <p class="lede">Comprehensive risk profiles, hazard exposure, and response readiness — country by country.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -968,8 +1252,13 @@ def page_country_analysis():
 
 
 def page_live_alerts():
-    st.markdown('<h1 style="color:#1a66cc;">🚨 Live Disaster Alerts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="page-header fade-rise">
+        <div class="eyebrow">Live Feed</div>
+        <h1 class="display">Live <em>Disaster</em> Alerts</h1>
+        <p class="lede">Streaming intelligence from USGS, NASA EONET, GDACS, and Open-Meteo — updated continuously.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     with st.spinner("Fetching live data..."):
         events = get_all_live_events()
@@ -1034,8 +1323,13 @@ def page_live_alerts():
 
 
 def page_drought_heatwave():
-    st.markdown('<h1 style="color:#1a66cc;">🌡️ Drought & Heatwave Center</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="page-header fade-rise">
+        <div class="eyebrow">Climate Stress</div>
+        <h1 class="display">Drought &amp; <em>Heatwave</em> Center</h1>
+        <p class="lede">Climate-driven extremes monitored across regions — temperature anomalies, precipitation deficits, and emerging risk zones.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     tab_monitor, tab_help, tab_crops, tab_water = st.tabs(["🌡️ Heat Monitor", "💧 Drought Help", "🌾 Crop Advice", "🏗️ Water Harvesting"])
 
@@ -1195,8 +1489,13 @@ def page_drought_heatwave():
 
 
 def page_resources():
-    st.markdown('<h1 style="color:#1a66cc;">🆘 Resource Hub</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="page-header fade-rise">
+        <div class="eyebrow">Response &amp; Recovery</div>
+        <h1 class="display">Resource <em>Hub</em></h1>
+        <p class="lede">Evacuation guidance, shelter locators, and verified relief contacts — everything you need when minutes matter.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     tab_orgs, tab_shelters, tab_evac, tab_prep, tab_community, tab_report = st.tabs(["🏥 Aid Organizations", "🏠 Shelter & Water Locator", "🚨 Evacuation Guides", "🎒 Preparedness", "👥 Community", "📝 Report Disaster"])
 
@@ -1384,8 +1683,13 @@ def page_resources():
 
 
 def page_mining():
-    st.markdown('<h1 style="color:#1a66cc;">⛏️ Mining Disasters & Environmental Impacts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Global database of abandoned mines, active mining pits, and rare earth extraction sites causing environmental disasters. Sources: USGS MRDS, AML Inventories, EJAtlas, research literature.</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="page-header fade-rise">
+        <div class="eyebrow">Industrial &amp; Environmental</div>
+        <h1 class="display">Mining <em>Disasters</em> &amp; Environmental Impacts</h1>
+        <p class="lede">Abandoned and active mine sites, rare earth extraction zones, and the people and ecosystems exposed to them.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     tab_abandoned, tab_active, tab_ree, tab_map, tab_country = st.tabs([
         "🏚️ Abandoned Mines", "⚙️ Active Mining Pits", "💎 Rare Earth Mines", "🗺️ Mine Map", "🔍 By Country"
