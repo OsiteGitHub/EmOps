@@ -294,22 +294,78 @@ CUSTOM_CSS = """
       }
 
       /* ── Section headers (minimal) ─────────────────────────── */
+    /* Section headers (prominent glass) */
       .section-header {
-          background: transparent;
-          border-left: none;
-          padding: 32px 0 14px 0;
-          margin: 0;
-          border-radius: 0;
-          border-bottom: 1px solid var(--border-soft);
-          margin-bottom: 18px;
+          background: rgba(255, 255, 255, 0.07);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          padding: 16px 22px;
+          margin: 28px 0 16px 0;
+          border-radius: 14px;
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 6px 24px rgba(0, 0, 0, 0.22);
+          position: relative;
+          overflow: hidden;
+      }
+      .section-header::before {
+          content: '';
+          position: absolute;
+          left: 0; top: 0; bottom: 0;
+          width: 3px;
+          background: linear-gradient(180deg, var(--accent), rgba(95,184,255,0));
       }
       .section-header h2 {
           color: var(--fg) !important;
           margin: 0;
           font-family: 'Instrument Serif', Georgia, serif !important;
-          font-size: 1.7rem;
+          font-size: 1.75rem;
           font-weight: 400;
           letter-spacing: -0.01em;
+      }
+      /* Top navigation glass pills */
+      .top-nav-wrap {
+          margin: 0 0 22px 0;
+          padding: 10px 14px;
+          background: rgba(255, 255, 255, 0.06);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid var(--border-soft);
+          border-radius: 999px;
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 6px 24px rgba(0, 0, 0, 0.25);
+      }
+      .top-nav-wrap div[role="radiogroup"] {
+          gap: 6px !important;
+          flex-wrap: wrap;
+          justify-content: center;
+      }
+      .top-nav-wrap div[role="radiogroup"] label {
+          background: transparent !important;
+          border: 1px solid transparent !important;
+          border-radius: 999px !important;
+          padding: 8px 18px !important;
+          margin: 0 !important;
+          cursor: pointer;
+          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      }
+      .top-nav-wrap div[role="radiogroup"] label:hover {
+          background: rgba(255, 255, 255, 0.07) !important;
+          border-color: var(--border-soft) !important;
+      }
+      .top-nav-wrap div[role="radiogroup"] label:has(input:checked) {
+          background: rgba(255, 255, 255, 0.14) !important;
+          border-color: rgba(255, 255, 255, 0.28) !important;
+      }
+      .top-nav-wrap div[role="radiogroup"] label > div:first-child,
+      .top-nav-wrap div[role="radiogroup"] label input {
+          display: none !important;
+      }
+      .top-nav-wrap div[role="radiogroup"] label p,
+      .top-nav-wrap div[role="radiogroup"] label span {
+          color: var(--fg) !important;
+          font-family: 'Inter', sans-serif !important;
+          font-weight: 500 !important;
+          font-size: 0.86rem !important;
+          margin: 0 !important;
       }
 
       /* ── Resource cards ────────────────────────────────────── */
@@ -624,8 +680,8 @@ def page_dashboard():
     legend_html += '</div>'
     st.markdown(legend_html, unsafe_allow_html=True)
 
-    globe_html = create_rotating_globe_html(all_events, selected_types=filter_types if filter_types else None, height=580)
-    components.html(globe_html, height=600, scrolling=False)
+    gmap = create_global_map(all_events, selected_types=filter_types if filter_types else None, height=580)
+    st_folium(gmap, width=None, height=560, returned_objects=[])
 
     col_left, col_right = st.columns([3, 2])
 
@@ -1602,194 +1658,52 @@ def page_mining():
             render_mine_card(m)
 
 
-with st.sidebar:
-    page = st.radio(
-        "Navigation",
-        ["🗺️ Dashboard", "🏳️ Country Analysis", "🚨 Live Alerts", "🌡️ Drought & Heatwave", "⛏️ Mining Disasters", "🆘 Resource Hub"],
-        label_visibility="collapsed"
-    )
-
-    st.markdown("<hr style='border-color:rgba(0,0,0,0.2);'>", unsafe_allow_html=True)
-
-    st.markdown("#### Quick Stats")
-    try:
-        quick_events = get_all_live_events()
-        eq_count = sum(1 for e in quick_events if e.get("type") == "Earthquake")
-        storm_count = sum(1 for e in quick_events if e.get("type") in ["Storm", "Tropical Cyclone"])
-        fire_count = sum(1 for e in quick_events if e.get("type") == "Wildfire")
-        flood_count = sum(1 for e in quick_events if e.get("type") == "Flood")
-        volc_count = sum(1 for e in quick_events if e.get("type") == "Volcanic Eruption")
-        landslide_count = sum(1 for e in quick_events if e.get("type") == "Landslide")
-        drought_count = sum(1 for e in quick_events if e.get("type") == "Drought")
-
-        mine_total = len(ABANDONED_MINES) + len(RARE_EARTH_MINES)
-        st.markdown(f"""
-        <div style="font-size:0.9rem; color:#111111; font-weight:600;">
-            <p>🔴 Earthquakes: <b style="color:#cc0000;">{eq_count}</b></p>
-            <p>🌀 Storms: <b style="color:#1a66cc;">{storm_count}</b></p>
-            <p>🔥 Wildfires: <b style="color:#cc5500;">{fire_count}</b></p>
-            <p>🌊 Floods: <b style="color:#0055aa;">{flood_count}</b></p>
-            <p>🌋 Volcanoes: <b style="color:#cc4400;">{volc_count}</b></p>
-            <p>🏔️ Landslides: <b style="color:#775522;">{landslide_count}</b></p>
-            <p>☀️ Droughts: <b style="color:#aa6600;">{drought_count}</b></p>
-            <p>⛏️ Mine Sites: <b style="color:#8B4513;">{mine_total}</b></p>
-        </div>
-        """, unsafe_allow_html=True)
-    except Exception:
-        st.markdown('<p style="color:#111111; font-weight:600;">Loading stats...</p>', unsafe_allow_html=True)
-
-    st.markdown("<hr style='border-color:rgba(0,0,0,0.2);'>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style="font-size:0.75rem; color:#333333; text-align:center;">
-        <p>Data Sources: USGS, NASA EONET, GDACS, ReliefWeb, Open-Meteo</p>
-        <p>Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown('<div id="top-nav-anchor"></div>', unsafe_allow_html=True)
+page = st.radio(
+    "Navigation",
+    ["🗺️ Dashboard", "🏳️ Country Analysis", "🚨 Live Alerts", "🌡️ Drought & Heatwave", "⛏️ Mining Disasters", "🆘 Resource Hub"],
+    label_visibility="collapsed",
+    horizontal=True,
+    key="top_nav"
+)
 
 
 components.html("""
 <script>
-(function() {
+(function(){
   var pd = window.parent.document;
+  /* Hide sidebar */
+  var s = pd.createElement('style');
+  s.textContent = 'section[data-testid="stSidebar"]{display:none !important;width:0 !important;} [data-testid="stSidebarCollapsedControl"]{display:none !important;}';
+  pd.head.appendChild(s);
 
-  /* ── helpers ───────────────────────────────────────────── */
-  function getSidebar() {
-    return pd.querySelector('section[data-testid="stSidebar"]');
-  }
-
-  function isOpen() {
-    /* Read stored state; fall back to checking bounding rect */
-    var stored = window.parent.localStorage.getItem('cst_sidebar_open');
-    if (stored !== null) return stored === 'true';
-    var s = getSidebar();
-    return s ? s.getBoundingClientRect().left > -100 : true;
-  }
-
-  /* ── CSS injection to control sidebar visibility ────────── */
-  function ensureStyle() {
-    var s = pd.getElementById('cst-sb-style');
-    if (!s) {
-      s = pd.createElement('style');
-      s.id = 'cst-sb-style';
-      pd.head.appendChild(s);
+  /* Tag the nav radio so CSS can style it */
+  function tagNav(){
+    var anchor = pd.getElementById('top-nav-anchor');
+    if(!anchor) return false;
+    var sib = anchor.parentElement;
+    while(sib && sib.nextElementSibling){
+      sib = sib.nextElementSibling;
+      var radio = sib.querySelector ? sib.querySelector('[data-testid="stRadio"]') : null;
+      if(radio){ radio.classList.add('top-nav-wrap'); return true; }
+      if(sib.getAttribute && sib.getAttribute('data-testid') === 'stRadio'){
+        sib.classList.add('top-nav-wrap'); return true;
+      }
     }
-    return s;
+    /* Fallback: first stRadio on the page */
+    var first = pd.querySelector('[data-testid="stRadio"]');
+    if(first){ first.classList.add('top-nav-wrap'); return true; }
+    return false;
   }
-
-  function getSidebarWidth() {
-    var s = getSidebar();
-    if (!s) return 248;
-    var w = s.getBoundingClientRect().width;
-    return w > 10 ? w : 248;
-  }
-
-  function positionBtn(btn, open) {
-    if (!btn) return;
-    btn.style.left = open ? (getSidebarWidth() + 12) + 'px' : '14px';
-  }
-
-  function applySidebarState(open) {
-    window.parent.localStorage.setItem('cst_sidebar_open', String(open));
-    var st = ensureStyle();
-    if (open) {
-      st.textContent = [
-        'section[data-testid="stSidebar"]{',
-        '  transform:translateX(0) !important;',
-        '  min-width:var(--sidebar-width,244px) !important;',
-        '  width:var(--sidebar-width,244px) !important;',
-        '  display:block !important;',
-        '}'
-      ].join('');
-    } else {
-      st.textContent = [
-        'section[data-testid="stSidebar"]{',
-        '  transform:translateX(-110%) !important;',
-        '  min-width:0 !important;',
-        '  width:0 !important;',
-        '  overflow:hidden !important;',
-        '}',
-        '[data-testid="stAppViewContainer"]>section:not([data-testid="stSidebar"]),',
-        '.main .block-container{',
-        '  margin-left:0 !important;',
-        '  padding-left:1.5rem !important;',
-        '}'
-      ].join('');
-    }
-    var btn = pd.getElementById('cst-sidebar-toggle');
-    setTimeout(function() { positionBtn(btn, open); }, 80);
-  }
-
-  /* ── button label ───────────────────────────────────────── */
-  function updateLabel(btn) {
-    if (!btn) return;
-    if (isOpen()) {
-      btn.innerHTML = '&#x2715;&nbsp;Close';
-    } else {
-      btn.innerHTML = '&#9776;&nbsp;Menu';
-    }
-  }
-
-  /* ── inject the custom button once ─────────────────────── */
-  function injectBtn() {
-    if (pd.getElementById('cst-sidebar-toggle')) return;
-
-    var btn = pd.createElement('div');
-    btn.id = 'cst-sidebar-toggle';
-    btn.setAttribute('role', 'button');
-    btn.setAttribute('tabindex', '0');
-    btn.style.cssText = [
-      'position:fixed',
-      'top:12px',
-      'left:14px',
-      'z-index:2147483647',
-      'background:#1a66cc',
-      'color:#ffffff',
-      'border-radius:8px',
-      'padding:7px 15px',
-      'font-size:0.84rem',
-      'font-family:Courier New,Courier,monospace',
-      'font-weight:600',
-      'letter-spacing:0.03em',
-      'cursor:pointer',
-      'box-shadow:0 2px 10px rgba(0,0,0,0.22)',
-      'user-select:none',
-      'transition:background 0.18s,box-shadow 0.18s,left 0.28s ease',
-      'min-width:84px',
-      'text-align:center',
-      'line-height:1.6'
-    ].join(';');
-
-    btn.onmouseenter = function() {
-      btn.style.background = '#1452a8';
-      btn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.30)';
-    };
-    btn.onmouseleave = function() {
-      btn.style.background = '#1a66cc';
-      btn.style.boxShadow = '0 2px 10px rgba(0,0,0,0.22)';
-    };
-
-    btn.onclick = function() {
-      var nowOpen = isOpen();
-      applySidebarState(!nowOpen);
-      updateLabel(btn);
-    };
-
-    /* Set initial state (sidebar starts open per Streamlit config) */
-    if (window.parent.localStorage.getItem('cst_sidebar_open') === null) {
-      window.parent.localStorage.setItem('cst_sidebar_open', 'true');
-    }
-    pd.body.appendChild(btn);
-    var openNow = isOpen();
-    applySidebarState(openNow);
-    updateLabel(btn);
-    /* Position after sidebar has rendered */
-    setTimeout(function() { positionBtn(btn, isOpen()); }, 300);
-  }
-
-  setTimeout(injectBtn, 350);
+  var tries = 0;
+  var iv = setInterval(function(){
+    if(tagNav() || ++tries > 30) clearInterval(iv);
+  }, 120);
 })();
 </script>
 """, height=0)
+
+
 
 if "🗺️ Dashboard" in page:
     page_dashboard()
