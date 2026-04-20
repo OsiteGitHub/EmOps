@@ -346,9 +346,7 @@ CUSTOM_CSS = """
       }
       /* Top navigation glass pills */
       .top-nav-wrap {
-          margin: 0 auto 22px auto;
-          max-width: 760px;
-          width: fit-content;
+          margin: 0 0 22px 0;
           padding: 10px 14px;
           background: rgba(255, 255, 255, 0.06);
           backdrop-filter: blur(14px);
