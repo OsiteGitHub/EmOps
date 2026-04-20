@@ -850,45 +850,45 @@ def page_dashboard():
     gmap = create_global_map(all_events, selected_types=filter_types if filter_types else None, height=580)
     st_folium(gmap, width=None, height=560, returned_objects=[])
 
-    col_left, col_right = st.columns([3, 2])
-
-    with col_left:
-        st.markdown('<div class="section-header"><h2>📊 Event Distribution</h2></div>', unsafe_allow_html=True)
-        if type_counts:
-            df_types = pd.DataFrame(list(type_counts.items()), columns=["Type", "Count"])
-            df_types = df_types.sort_values("Count", ascending=True)
-            colors = [DISASTER_COLORS.get(t, "#4488ff") for t in df_types["Type"]]
-            fig = go.Figure(go.Bar(
-                x=df_types["Count"], y=df_types["Type"],
-                orientation='h', marker_color=colors,
-                text=df_types["Count"], textposition="auto",
-                textfont=dict(color="#ffffff", family="Inter"),
-                insidetextfont=dict(color="#ffffff"),
-                outsidetextfont=dict(color="#ffffff")
-            ))
-            fig.update_layout(
-                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#ffffff", family="Inter"), height=350,
-                margin=dict(l=0, r=20, t=10, b=10),
-                xaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1")),
-                yaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1"))
-            )
-            st.plotly_chart(fig, width="stretch")
-
-    with col_right:
-        st.markdown('<div class="section-header"><h2>🚨 Latest Alerts</h2></div>', unsafe_allow_html=True)
-        sev_rank = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
-        sorted_events = sorted(
-            all_events,
-            key=lambda e: (
-                -(_sort_time(e) - datetime.min).total_seconds(),
-                sev_rank.get(e.get("severity", "Low"), 4)
-            )
+    st.markdown('<div class="section-header"><h2>🚨 Latest Alerts</h2></div>', unsafe_allow_html=True)
+    sev_rank = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
+    sorted_events = sorted(
+        all_events,
+        key=lambda e: (
+            -(_sort_time(e) - datetime.min).total_seconds(),
+            sev_rank.get(e.get("severity", "Low"), 4)
         )
-        alert_container = st.container()
-        with alert_container:
-            for event in sorted_events[:12]:
+    )
+    latest_alerts = sorted_events[:12]
+    cols_per_row = 4
+    for row_start in range(0, len(latest_alerts), cols_per_row):
+        row_events = latest_alerts[row_start:row_start + cols_per_row]
+        alert_cols = st.columns(cols_per_row)
+        for idx, event in enumerate(row_events):
+            with alert_cols[idx]:
                 st.markdown(render_alert_card(event), unsafe_allow_html=True)
+
+    st.markdown('<div class="section-header"><h2>📊 Event Distribution</h2></div>', unsafe_allow_html=True)
+    if type_counts:
+        df_types = pd.DataFrame(list(type_counts.items()), columns=["Type", "Count"])
+        df_types = df_types.sort_values("Count", ascending=True)
+        colors = [DISASTER_COLORS.get(t, "#4488ff") for t in df_types["Type"]]
+        fig = go.Figure(go.Bar(
+            x=df_types["Count"], y=df_types["Type"],
+            orientation='h', marker_color=colors,
+            text=df_types["Count"], textposition="auto",
+            textfont=dict(color="#ffffff", family="Inter"),
+            insidetextfont=dict(color="#ffffff"),
+            outsidetextfont=dict(color="#ffffff")
+        ))
+        fig.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#ffffff", family="Inter"), height=380,
+            margin=dict(l=0, r=20, t=10, b=10),
+            xaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1")),
+            yaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1"))
+        )
+        st.plotly_chart(fig, width="stretch")
 
     st.markdown('<div class="section-header"><h2>📋 Global Disaster History & Situation Reports</h2></div>', unsafe_allow_html=True)
 
