@@ -346,7 +346,7 @@ CUSTOM_CSS = """
       }
       /* Top navigation glass pills */
       .top-nav-wrap {
-          margin: 0 0 22px 0;
+          margin: 0 auto 22px auto !important;
           padding: 10px 14px;
           background: rgba(255, 255, 255, 0.06);
           backdrop-filter: blur(14px);
@@ -354,6 +354,8 @@ CUSTOM_CSS = """
           border: 1px solid var(--border-soft);
           border-radius: 999px;
           box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 6px 24px rgba(0, 0, 0, 0.25);
+          display: table;
+          max-width: max-content;
       }
       .top-nav-wrap div[role="radiogroup"] {
           gap: 6px !important;
