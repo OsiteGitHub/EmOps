@@ -594,6 +594,62 @@ CUSTOM_CSS = """
           color: var(--accent) !important;
       }
 
+        /* ── Cursor: pointer on all interactive elements ─── */
+
+        /* Native links */
+        a, a:hover { cursor: pointer !important; }
+
+        /* Streamlit select/dropdown boxes */
+        div[data-testid="stSelectbox"] > div,
+        div[data-testid="stSelectbox"] label,
+        div[data-testid="stSelectbox"] [role="listbox"],
+        div[data-testid="stSelectbox"] [role="option"] { cursor: pointer !important; }
+        div[data-baseweb="select"] *,
+        div[data-baseweb="select"] > div { cursor: pointer !important; }
+
+        /* Multiselect */
+        div[data-testid="stMultiSelect"] > div,
+        div[data-testid="stMultiSelect"] [role="option"] { cursor: pointer !important; }
+
+        /* Buttons */
+        button,
+        div[data-testid="stButton"] button,
+        div[data-testid="baseButton-secondary"],
+        div[data-testid="baseButton-primary"] { cursor: pointer !important; }
+
+        /* Radio buttons (top nav + inline radios) */
+        div[role="radiogroup"] label,
+        div[data-testid="stRadio"] label { cursor: pointer !important; }
+
+        /* Checkboxes */
+        div[data-testid="stCheckbox"] label { cursor: pointer !important; }
+
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] { cursor: pointer !important; }
+
+        /* Expander toggles */
+        div[data-testid="stExpander"] summary,
+        details > summary { cursor: pointer !important; }
+
+        /* Sidebar nav links (just in case) */
+        .css-1d391kg a,
+        section[data-testid="stSidebar"] a { cursor: pointer !important; }
+
+        /* Any element with an onclick-style class */
+        [onclick], [role="button"], [role="link"],
+        [role="menuitem"], [role="menuitemradio"] { cursor: pointer !important; }
+
+        /* Plotly clickable legend + traces */
+        .plotly .legend .groups .traces,
+        .modebar-btn { cursor: pointer !important; }
+
+        /* File uploader */
+        div[data-testid="stFileUploader"] section { cursor: pointer !important; }
+
+        /* Slider thumb */
+        div[data-testid="stSlider"] div[role="slider"] { cursor: grab !important; }
+        div[data-testid="stSlider"] div[role="slider"]:active { cursor: grabbing !important; }
+
         /* Mobile responsive */
         @media (max-width: 768px) {
             .stMainBlockContainer,
