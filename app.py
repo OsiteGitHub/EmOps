@@ -640,7 +640,7 @@ def render_risk_bar(name, score, max_score=10):
         color = "#44cc88"
     return f"""
     <div style="display:flex; align-items:center; margin:6px 0;">
-        <span style="width:160px; color:#111111; font-size:0.85rem;">{name}</span>
+        <span style="width:160px; color:#9be8a8; font-size:0.85rem;">{name}</span>
         <div class="risk-bar" style="flex:1;">
             <div class="risk-fill" style="width:{pct}%; background:{color};"></div>
         </div>
@@ -939,7 +939,7 @@ def page_country_analysis():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#111111;margin-top:5px;font-size:0.82rem;line-height:1.4;">{_safe(d.get('description', ''))}</div>
+                    <div style="color:#9be8a8;margin-top:5px;font-size:0.82rem;line-height:1.4;">{_safe(d.get('description', ''))}</div>
                     <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1490,7 +1490,7 @@ def page_resources():
                     <div class="alert-type" style="color:#1a66cc;">📝 {_safe(report.get('type', ''))} — {_safe(report.get('severity', ''))}</div>
                     <div class="alert-title">{_safe(report.get('location', ''))}, {_safe(report.get('country', ''))}</div>
                     <div class="alert-time">{_safe(report.get('date', ''))} | Submitted: {_safe(report.get('submitted_at', ''))}</div>
-                    <div style="color:#111111;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
+                    <div style="color:#9be8a8;margin-top:5px;font-size:0.85rem;">{_safe(report.get('description', '')[:200])}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1533,7 +1533,7 @@ def page_mining():
                 <span style="color:{sc};font-weight:700;font-size:0.8rem;white-space:nowrap;margin-left:8px;">{sev}</span>
             </div>
             <div style="font-size:0.78rem;color:#555555;margin-bottom:4px;">📍 {loc_str} | 🪨 {mineral} | {status}{extras}</div>
-            <div style="font-size:0.83rem;color:#111111;line-height:1.4;margin-bottom:4px;">{issue}</div>
+            <div style="font-size:0.83rem;color:#9be8a8;line-height:1.4;margin-bottom:4px;">{issue}</div>
             <div style="font-size:0.7rem;color:#1a66cc;">📚 {source}</div>
         </div>
         """, unsafe_allow_html=True)
