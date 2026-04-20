@@ -209,7 +209,6 @@ def fetch_gdacs_events():
         return []
 
 
-@st.cache_data(ttl=300, show_spinner=False)
 def get_all_live_events():
     from regional_data import get_regional_events
     earthquakes = fetch_earthquakes(min_magnitude=2.5, days=7)
