@@ -593,7 +593,99 @@ CUSTOM_CSS = """
           background: rgba(255, 255, 255, 0.06) !important;
           color: var(--accent) !important;
       }
-  </style>
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .stMainBlockContainer,
+            div[data-testid="stMainBlockContainer"],
+            .block-container {
+                padding-top: 0.8rem !important;
+                padding-left: 0.7rem !important;
+                padding-right: 0.7rem !important;
+            }
+            .brand-header { padding: 0.6rem 0 0.2rem 0; }
+            .brand-header .hero-title { font-size: 2.4rem !important; }
+            .brand-header .brand-tagline {
+                font-size: 0.78rem !important;
+                padding: 0 0.4rem;
+                line-height: 1.45 !important;
+            }
+            .top-nav-wrap {
+                border-radius: 16px !important;
+                padding: 6px 8px !important;
+                margin: 0 0 14px 0 !important;
+            }
+            .top-nav-wrap div[role="radiogroup"] {
+                flex-wrap: nowrap !important;
+                justify-content: flex-start !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                padding-bottom: 2px;
+            }
+            .top-nav-wrap div[role="radiogroup"]::-webkit-scrollbar { display: none; }
+            .top-nav-wrap div[role="radiogroup"] label {
+                flex: 0 0 auto !important;
+                padding: 7px 13px !important;
+                white-space: nowrap !important;
+            }
+            .top-nav-wrap div[role="radiogroup"] label p,
+            .top-nav-wrap div[role="radiogroup"] label span {
+                font-size: 0.78rem !important;
+                white-space: nowrap !important;
+            }
+            .section-header {
+                padding: 12px 14px !important;
+                margin: 18px 0 12px 0 !important;
+                border-radius: 12px !important;
+            }
+            .section-header h2 { font-size: 1.25rem !important; }
+            .metric-card {
+                min-height: 92px !important;
+                padding: 14px 10px !important;
+                border-radius: 12px !important;
+            }
+            .metric-card h3 { font-size: 0.58rem !important; letter-spacing: 0.12em !important; }
+            .metric-card .value { font-size: 1.6rem !important; }
+            .hero-wrap { padding: 1.2rem 0.5rem 0.8rem 0.5rem; }
+            div[data-testid="stHorizontalBlock"] {
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+                flex: 1 1 calc(50% - 8px) !important;
+                min-width: calc(50% - 8px) !important;
+            }
+            iframe { max-width: 100% !important; }
+            .stPlotlyChart, .js-plotly-plot { max-width: 100% !important; }
+            .stTabs [data-baseweb="tab-list"] {
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                scrollbar-width: none;
+            }
+            .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar { display: none; }
+            .stTabs [data-baseweb="tab"] {
+                flex: 0 0 auto !important;
+                padding: 8px 12px !important;
+                font-size: 0.8rem !important;
+                white-space: nowrap !important;
+            }
+            .alert-card, .resource-card { padding: 10px 12px !important; }
+            .alert-card .alert-title { font-size: 0.88rem !important; }
+            .resource-card h4 { font-size: 1rem !important; }
+        }
+
+        @media (max-width: 480px) {
+            .brand-header .hero-title { font-size: 2rem !important; }
+            .brand-header .brand-tagline { font-size: 0.72rem !important; }
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+                flex: 1 1 100% !important;
+                min-width: 100% !important;
+            }
+            .metric-card .value { font-size: 1.5rem !important; }
+        }
+    </style>
   """
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
