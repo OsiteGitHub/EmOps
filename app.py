@@ -60,424 +60,463 @@ st.set_page_config(
 )
 
 CUSTOM_CSS = """
-<style>
-    * {
-        font-family: 'Courier New', Courier, monospace !important;
-    }
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    .material-icons,
-    .material-icons-round,
-    .material-icons-outlined,
-    [data-testid="collapsedControl"] span,
-    [data-testid="collapsedControl"] svg,
-    button[kind="header"] span,
-    span[class*="material"] {
-        font-family: 'Material Icons' !important;
-    }
+      :root {
+          --bg: #003047;
+          --bg-deeper: #00202f;
+          --bg-card: rgba(255, 255, 255, 0.04);
+          --fg: #ffffff;
+          --muted: #a8aab1;
+          --border-soft: rgba(255, 255, 255, 0.10);
+          --border-mid: rgba(255, 255, 255, 0.18);
+          --accent: #5fb8ff;
+          --accent-soft: rgba(95, 184, 255, 0.18);
+      }
 
-    .stApp {
-        background-color: #ffffff;
-        color: #111111;
-        font-family: 'Courier New', Courier, monospace;
-    }
+      * {
+          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+      }
 
-    /* Reduce default top padding of main content area */
-    .stMainBlockContainer,
-    div[data-testid="stMainBlockContainer"],
-    .block-container {
-        padding-top: 2rem !important;
-    }
+      h1, h2, h3, h4, h5, h6,
+      .display-serif {
+          font-family: 'Instrument Serif', Georgia, serif !important;
+          font-weight: 400 !important;
+          letter-spacing: -0.01em;
+          color: var(--fg);
+      }
 
-    section[data-testid="stSidebar"] {
-        background-color: #f0f0f0;
-        border-right: 1px solid #cccccc;
-    }
+      .material-icons,
+      .material-icons-round,
+      .material-icons-outlined,
+      [data-testid="collapsedControl"] span,
+      [data-testid="collapsedControl"] svg,
+      button[kind="header"] span,
+      span[class*="material"] {
+          font-family: 'Material Icons' !important;
+      }
 
-    section[data-testid="stSidebar"] .stMarkdown h1,
-    section[data-testid="stSidebar"] .stMarkdown h2,
-    section[data-testid="stSidebar"] .stMarkdown h3,
-    section[data-testid="stSidebar"] .stMarkdown h4 {
-        color: #111111;
-        font-weight: 700;
-    }
+      body, .stApp {
+          background: var(--bg) !important;
+          color: var(--fg) !important;
+      }
 
-    section[data-testid="stSidebar"] .stRadio label,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label,
-    section[data-testid="stSidebar"] .stRadio label p,
-    section[data-testid="stSidebar"] .stRadio label span,
-    section[data-testid="stSidebar"] .stRadio label div,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label span,
-    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div,
-    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] label {
-        color: #111111 !important;
-        font-weight: 700 !important;
-    }
+      /* Reduce default top padding of main content area */
+      .stMainBlockContainer,
+      div[data-testid="stMainBlockContainer"],
+      .block-container {
+          padding-top: 1.5rem !important;
+          max-width: 1400px;
+      }
 
-    section[data-testid="stSidebar"] hr {
-        border-color: #bbbbbb !important;
-        opacity: 0.8;
-    }
+      /* ── Sidebar (dark glass) ──────────────────────────────── */
+      section[data-testid="stSidebar"] {
+          background: rgba(0, 20, 30, 0.85) !important;
+          border-right: 1px solid var(--border-soft) !important;
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+      }
 
-    /* Hide native sidebar toggle arrows — keep in normal flow so click() works */
-    [data-testid="stSidebarCollapseButton"],
-    [data-testid="collapsedControl"] {
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
+      section[data-testid="stSidebar"] .stMarkdown h1,
+      section[data-testid="stSidebar"] .stMarkdown h2,
+      section[data-testid="stSidebar"] .stMarkdown h3,
+      section[data-testid="stSidebar"] .stMarkdown h4 {
+          color: var(--fg) !important;
+          font-family: 'Instrument Serif', Georgia, serif !important;
+      }
 
-    /* Hide the three-dot header menu entirely */
-    #MainMenu,
-    [data-testid="stMainMenu"],
-    header [data-testid="stToolbar"],
-    header button[aria-label="Open Settings"],
-    header button[title="Open Settings"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
+      section[data-testid="stSidebar"] .stRadio label,
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label,
+      section[data-testid="stSidebar"] .stRadio label p,
+      section[data-testid="stSidebar"] .stRadio label span,
+      section[data-testid="stSidebar"] .stRadio label div,
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p,
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label span,
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div,
+      section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+      section[data-testid="stSidebar"] p,
+      section[data-testid="stSidebar"] span,
+      section[data-testid="stSidebar"] label {
+          color: var(--fg) !important;
+          font-weight: 500 !important;
+          font-size: 0.92rem !important;
+      }
 
-    .metric-card {
-        background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
-        border: 1px solid #c8d8f0;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        margin-bottom: 10px;
-        min-height: 110px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-    }
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+          padding: 8px 12px !important;
+          border-radius: 10px;
+          margin: 2px 0;
+          transition: background 0.18s ease;
+      }
+      section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
+          background: rgba(255, 255, 255, 0.05);
+      }
 
-    .metric-card h3 {
-        color: #333333;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin: 0;
-    }
+      section[data-testid="stSidebar"] hr {
+          border-color: var(--border-soft) !important;
+          opacity: 1;
+      }
 
-    .metric-card .value {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 5px 0;
-    }
+      /* Hide native sidebar toggle arrows */
+      [data-testid="stSidebarCollapseButton"],
+      [data-testid="collapsedControl"] {
+          opacity: 0 !important;
+          pointer-events: none !important;
+      }
 
-    .metric-card .value.red { color: #cc2222; }
-    .metric-card .value.orange { color: #cc6600; }
-    .metric-card .value.blue { color: #1a66cc; }
-    .metric-card .value.green { color: #228855; }
-    .metric-card .value.yellow { color: #aa8800; }
-    .metric-card .value.brown { color: #7a4f2a; }
+      #MainMenu,
+      [data-testid="stMainMenu"],
+      header [data-testid="stToolbar"],
+      header button[aria-label="Open Settings"],
+      header button[title="Open Settings"] {
+          display: none !important;
+          visibility: hidden !important;
+      }
 
-    .alert-card {
-        background: #f8f9fa;
-        border-left: 4px solid;
-        border-radius: 0 8px 8px 0;
-        padding: 12px 16px;
-        margin-bottom: 8px;
-    }
+      header[data-testid="stHeader"] {
+          background: transparent !important;
+      }
 
-    .alert-critical { border-color: #cc2222; }
-    .alert-high { border-color: #cc6600; }
-    .alert-moderate { border-color: #aa8800; }
-    .alert-low { border-color: #228855; }
+      /* ── Liquid glass utility ──────────────────────────────── */
+      .liquid-glass {
+          background: rgba(255, 255, 255, 0.04);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid var(--border-soft);
+          border-radius: 14px;
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06),
+                      0 4px 20px rgba(0, 0, 0, 0.18);
+      }
 
-    .alert-card .alert-type {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-    }
+      /* ── Hero section ──────────────────────────────────────── */
+      .hero-wrap {
+          text-align: center;
+          padding: 2.5rem 1rem 1.5rem 1rem;
+          animation: fade-rise 0.9s ease-out both;
+      }
+      .hero-title {
+          font-family: 'Instrument Serif', Georgia, serif !important;
+          font-size: clamp(3.5rem, 9vw, 7rem) !important;
+          line-height: 0.95 !important;
+          letter-spacing: -0.04em !important;
+          color: var(--fg);
+          margin: 0;
+          font-weight: 400;
+      }
+      .hero-title em {
+          font-style: italic;
+          color: var(--muted);
+      }
+      .hero-sub {
+          color: var(--muted);
+          font-size: 1.05rem;
+          max-width: 640px;
+          margin: 1.4rem auto 0 auto;
+          line-height: 1.65;
+          font-weight: 400;
+          font-family: 'Inter', sans-serif !important;
+      }
 
-    .alert-card .alert-title {
-        font-size: 0.95rem;
-        color: #111111;
-        margin: 4px 0;
-    }
+      /* ── Metric cards (glass) ──────────────────────────────── */
+      .metric-card {
+          background: rgba(255, 255, 255, 0.04);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid var(--border-soft);
+          border-radius: 14px;
+          padding: 22px 18px;
+          text-align: center;
+          margin-bottom: 10px;
+          min-height: 120px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          transition: transform 0.25s ease, border-color 0.25s ease;
+      }
+      .metric-card:hover {
+          transform: translateY(-2px);
+          border-color: var(--border-mid);
+      }
+      .metric-card h3 {
+          color: var(--muted);
+          font-size: 0.68rem;
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          margin: 0;
+          font-family: 'Inter', sans-serif !important;
+          font-weight: 500;
+      }
+      .metric-card .value {
+          font-size: 2.4rem;
+          font-weight: 400;
+          margin: 6px 0 0 0;
+          font-family: 'Instrument Serif', Georgia, serif !important;
+          letter-spacing: -0.02em;
+      }
+      .metric-card .value.red { color: #ff7a85; }
+      .metric-card .value.orange { color: #ffb168; }
+      .metric-card .value.blue { color: #5fb8ff; }
+      .metric-card .value.green { color: #6fd9a8; }
+      .metric-card .value.yellow { color: #ffd86b; }
+      .metric-card .value.brown { color: #d8a878; }
 
-    .alert-card .alert-time {
-        font-size: 0.75rem;
-        color: #333333;
-    }
+      /* ── Alert cards (glass) ───────────────────────────────── */
+      .alert-card {
+          background: rgba(255, 255, 255, 0.03);
+          border-left: 3px solid;
+          border-radius: 10px;
+          padding: 12px 16px;
+          margin-bottom: 8px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+      }
+      .alert-critical { border-color: #ff5566; }
+      .alert-high { border-color: #ff9944; }
+      .alert-moderate { border-color: #ffd86b; }
+      .alert-low { border-color: #6fd9a8; }
+      .alert-card .alert-type {
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          font-weight: 600;
+      }
+      .alert-card .alert-title {
+          font-size: 0.95rem;
+          color: var(--fg);
+          margin: 4px 0;
+      }
+      .alert-card .alert-time {
+          font-size: 0.72rem;
+          color: var(--muted);
+      }
 
-    .risk-bar {
-        background: #dddddd;
-        border-radius: 6px;
-        height: 12px;
-        overflow: hidden;
-        margin: 4px 0;
-    }
+      /* ── Section headers (minimal) ─────────────────────────── */
+      .section-header {
+          background: transparent;
+          border-left: none;
+          padding: 32px 0 14px 0;
+          margin: 0;
+          border-radius: 0;
+          border-bottom: 1px solid var(--border-soft);
+          margin-bottom: 18px;
+      }
+      .section-header h2 {
+          color: var(--fg) !important;
+          margin: 0;
+          font-family: 'Instrument Serif', Georgia, serif !important;
+          font-size: 1.7rem;
+          font-weight: 400;
+          letter-spacing: -0.01em;
+      }
 
-    .risk-fill {
-        height: 100%;
-        border-radius: 6px;
-        transition: width 0.5s ease;
-    }
+      /* ── Resource cards ────────────────────────────────────── */
+      .resource-card {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border-soft);
+          border-radius: 12px;
+          padding: 18px;
+          margin-bottom: 12px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+      }
+      .resource-card h4 {
+          color: var(--accent);
+          margin: 0 0 8px 0;
+          font-family: 'Instrument Serif', Georgia, serif !important;
+          font-weight: 400;
+          font-size: 1.15rem;
+      }
+      .resource-card p {
+          color: var(--fg);
+          font-size: 0.86rem;
+          margin: 3px 0;
+          opacity: 0.9;
+      }
 
-    .section-header {
-        background: linear-gradient(90deg, #e8f0fe, transparent);
-        border-left: 3px solid #1a66cc;
-        padding: 10px 16px;
-        margin: 20px 0 15px 0;
-        border-radius: 0 8px 8px 0;
-    }
+      /* ── Risk bars ─────────────────────────────────────────── */
+      .risk-bar {
+          background: rgba(255, 255, 255, 0.08);
+          border-radius: 6px;
+          height: 12px;
+          overflow: hidden;
+          margin: 4px 0;
+      }
+      .risk-fill {
+          height: 100%;
+          border-radius: 6px;
+          transition: width 0.5s ease;
+      }
 
-    .section-header h2 {
-        color: #1a66cc;
-        margin: 0;
-        font-size: 1.2rem;
-    }
+      /* ── Expanders ─────────────────────────────────────────── */
+      div[data-testid="stExpander"] {
+          background: rgba(255, 255, 255, 0.03) !important;
+          border: 1px solid var(--border-soft) !important;
+          border-radius: 12px !important;
+      }
+      div[data-testid="stExpander"] summary,
+      div[data-testid="stExpander"] p,
+      div[data-testid="stExpander"] span {
+          color: var(--fg) !important;
+      }
 
-    .resource-card {
-        background: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        padding: 16px;
-        margin-bottom: 10px;
-    }
+      /* ── Tabs (glass pills) ────────────────────────────────── */
+      .stTabs [data-baseweb="tab-list"] {
+          gap: 6px;
+          background: transparent;
+          border-bottom: 1px solid var(--border-soft);
+      }
+      .stTabs [data-baseweb="tab"] {
+          background: transparent !important;
+          border: none !important;
+          border-radius: 0 !important;
+          color: var(--muted) !important;
+          padding: 10px 18px !important;
+          font-family: 'Inter', sans-serif !important;
+          font-size: 0.88rem !important;
+          font-weight: 500 !important;
+          transition: color 0.2s ease;
+      }
+      .stTabs [data-baseweb="tab"]:hover {
+          color: var(--fg) !important;
+      }
+      .stTabs [aria-selected="true"] {
+          background: transparent !important;
+          color: var(--fg) !important;
+          border-bottom: 2px solid var(--accent) !important;
+      }
 
-    .resource-card h4 {
-        color: #1a66cc;
-        margin: 0 0 8px 0;
-    }
+      /* ── Evac steps ────────────────────────────────────────── */
+      .evac-step {
+          background: rgba(255, 255, 255, 0.04);
+          border-radius: 10px;
+          padding: 11px 14px;
+          margin: 4px 0;
+          border-left: 3px solid var(--accent);
+          color: var(--fg);
+      }
 
-    .resource-card p {
-        color: #111111;
-        font-size: 0.85rem;
-        margin: 2px 0;
-    }
+      /* ── Streamlit metric ──────────────────────────────────── */
+      div[data-testid="stMetric"] {
+          background: rgba(255, 255, 255, 0.04) !important;
+          border: 1px solid var(--border-soft) !important;
+          border-radius: 12px !important;
+          padding: 16px !important;
+      }
+      div[data-testid="stMetric"] label {
+          color: var(--muted) !important;
+      }
+      div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+          color: var(--fg) !important;
+          font-family: 'Instrument Serif', Georgia, serif !important;
+      }
 
-    div[data-testid="stExpander"] {
-        background-color: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-    }
+      /* ── Inputs ────────────────────────────────────────────── */
+      .stSelectbox > div > div,
+      .stMultiSelect > div > div,
+      .stTextInput > div > div > input,
+      .stNumberInput > div > div > input,
+      div[data-baseweb="select"] > div {
+          background: rgba(255, 255, 255, 0.05) !important;
+          border-color: var(--border-mid) !important;
+          color: var(--fg) !important;
+          border-radius: 10px !important;
+      }
+      .stSelectbox label,
+      .stMultiSelect label,
+      .stTextInput label,
+      .stNumberInput label,
+      .stRadio label,
+      .stCheckbox label {
+          color: var(--fg) !important;
+      }
 
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
+      /* ── Buttons ───────────────────────────────────────────── */
+      .stButton > button,
+      .stDownloadButton > button {
+          background: rgba(255, 255, 255, 0.04) !important;
+          border: 1px solid var(--border-mid) !important;
+          color: var(--fg) !important;
+          border-radius: 999px !important;
+          padding: 8px 22px !important;
+          font-family: 'Inter', sans-serif !important;
+          font-weight: 500 !important;
+          transition: transform 0.18s ease, background 0.18s ease;
+      }
+      .stButton > button:hover {
+          background: rgba(255, 255, 255, 0.10) !important;
+          transform: scale(1.03);
+      }
 
-    .stTabs [data-baseweb="tab"] {
-        background-color: #f0f0f0;
-        border: 1px solid #cccccc;
-        border-radius: 8px 8px 0 0;
-        color: #333333;
-        padding: 8px 16px;
-    }
+      /* ── Plotly charts (transparent bg) ───────────────────── */
+      .js-plotly-plot, .plotly {
+          background: transparent !important;
+      }
 
-    .stTabs [aria-selected="true"] {
-        background-color: #e8f0fe;
-        color: #1a66cc;
-        border-color: #1a66cc;
-    }
+      /* ── Legend chips ──────────────────────────────────────── */
+      .legend-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          margin: 4px 8px 4px 0;
+          padding: 5px 12px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border-soft);
+          border-radius: 999px;
+          font-size: 0.78rem;
+          color: var(--fg);
+      }
+      .legend-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          vertical-align: middle;
+      }
 
-    .evac-step {
-        background: #f0f4ff;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin: 4px 0;
-        border-left: 3px solid #1a66cc;
-        color: #111111;
-    }
+      /* ── General text ──────────────────────────────────────── */
+      p, span, div, li {
+          color: var(--fg);
+      }
+      .stApp a {
+          color: var(--accent);
+      }
 
-    div[data-testid="stMetric"] {
-        background-color: #f8f9fa;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        padding: 15px;
-    }
+      /* ── Animations ───────────────────────────────────────── */
+      @keyframes fade-rise {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-rise { animation: fade-rise 0.85s ease-out both; }
+      .animate-fade-rise-delay { animation: fade-rise 0.85s ease-out 0.18s both; }
+      .animate-fade-rise-delay-2 { animation: fade-rise 0.85s ease-out 0.36s both; }
 
-    div[data-testid="stMetric"] label {
-        color: #333333;
-    }
-
-    div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
-        color: #1a66cc;
-    }
-
-    .stSelectbox > div > div {
-        background-color: #f8f9fa;
-        border-color: #cccccc;
-        color: #111111;
-    }
-
-    .stMultiSelect > div > div {
-        background-color: #f8f9fa;
-        border-color: #cccccc;
-    }
-
-    header[data-testid="stHeader"] {
-        background-color: #ffffff;
-    }
-
-    .legend-item {
-        display: inline-block;
-        margin-right: 15px;
-        font-size: 0.8rem;
-    }
-
-    .legend-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 4px;
-        vertical-align: middle;
-    }
-
-    /* ── Main menu (⋮ three-dots) popup ─────────────────────── */
-    [data-baseweb="popover"] {
-        min-width: 240px !important;
-        border-radius: 12px !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
-        overflow: hidden !important;
-    }
-
-    [data-baseweb="popover"] [data-baseweb="menu"] {
-        min-width: 240px !important;
-        padding: 8px 0 !important;
-        background: #ffffff !important;
-        border-radius: 12px !important;
-    }
-
-    [data-baseweb="popover"] ul {
-        min-width: 240px !important;
-        padding: 8px 0 !important;
-        margin: 0 !important;
-        list-style: none !important;
-        background: #ffffff !important;
-    }
-
-    [data-baseweb="popover"] li,
-    [data-baseweb="popover"] [role="option"],
-    [data-baseweb="popover"] [data-baseweb="menu-item"] {
-        padding: 12px 20px !important;
-        font-size: 0.92rem !important;
-        line-height: 1.5 !important;
-        color: #111111 !important;
-        font-family: 'Courier New', Courier, monospace !important;
-        letter-spacing: 0.01em !important;
-        cursor: pointer !important;
-        white-space: nowrap !important;
-        border-bottom: 1px solid #f0f0f0 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        transition: background 0.15s !important;
-    }
-
-    [data-baseweb="popover"] li:last-child,
-    [data-baseweb="popover"] [role="option"]:last-child {
-        border-bottom: none !important;
-    }
-
-    [data-baseweb="popover"] li:hover,
-    [data-baseweb="popover"] [role="option"]:hover,
-    [data-baseweb="popover"] [data-baseweb="menu-item"]:hover {
-        background: #f0f4ff !important;
-        color: #1a66cc !important;
-    }
-
-    [data-baseweb="popover"] li span,
-    [data-baseweb="popover"] [role="option"] span,
-    [data-baseweb="popover"] [data-baseweb="menu-item"] span {
-        font-family: 'Material Icons' !important;
-        font-size: 1.15rem !important;
-        color: #555555 !important;
-        line-height: 1 !important;
-        vertical-align: middle !important;
-    }
-
-    /* ── Settings / About modal ─────────────────────────────── */
-    [data-baseweb="modal"],
-    [data-testid="stModal"] {
-        border-radius: 14px !important;
-        overflow: hidden !important;
-    }
-
-    [data-baseweb="modal"] > div,
-    [data-testid="stModal"] > div {
-        border-radius: 14px !important;
-        background: #ffffff !important;
-        padding: 0 !important;
-        min-width: 360px !important;
-        box-shadow: 0 12px 48px rgba(0,0,0,0.22) !important;
-    }
-
-    [data-baseweb="modal"] h2,
-    [data-baseweb="modal"] h3 {
-        font-size: 1.1rem !important;
-        color: #1a66cc !important;
-        padding: 20px 24px 12px !important;
-        margin: 0 !important;
-        border-bottom: 1px solid #e8e8e8 !important;
-        font-family: 'Courier New', Courier, monospace !important;
-    }
-
-    [data-baseweb="modal"] label,
-    [data-baseweb="modal"] p {
-        font-size: 0.88rem !important;
-        color: #222222 !important;
-        line-height: 1.6 !important;
-        font-family: 'Courier New', Courier, monospace !important;
-        padding: 4px 0 !important;
-    }
-
-    [data-baseweb="modal"] [data-baseweb="form-control"],
-    [data-baseweb="modal"] [data-baseweb="block"] {
-        padding: 12px 24px !important;
-        border-bottom: 1px solid #f0f0f0 !important;
-    }
-
-    [data-baseweb="modal"] [data-baseweb="form-control"]:last-child {
-        border-bottom: none !important;
-    }
-
-    [data-baseweb="modal"] [data-baseweb="radio"],
-    [data-baseweb="modal"] [data-baseweb="checkbox"] {
-        gap: 10px !important;
-        align-items: center !important;
-        margin: 6px 0 !important;
-    }
-
-    /* Wider settings panel to avoid text cramping */
-    [data-testid="stSettings"] {
-        min-width: 320px !important;
-    }
-
-    [data-testid="stSettings"] section {
-        padding: 16px 20px !important;
-    }
-
-    [data-testid="stSettings"] label {
-        font-size: 0.88rem !important;
-        line-height: 1.6 !important;
-        color: #111111 !important;
-        display: block !important;
-        margin-bottom: 4px !important;
-    }
-
-    [data-testid="stSettings"] p {
-        font-size: 0.82rem !important;
-        color: #555555 !important;
-        line-height: 1.55 !important;
-        margin: 0 0 8px 0 !important;
-    }
-
-    /* Menu separator lines clean */
-    [data-baseweb="popover"] hr {
-        margin: 4px 12px !important;
-        border: none !important;
-        border-top: 1px solid #e8e8e8 !important;
-    }
-</style>
-"""
+      /* ── Menu popover (kept dark-themed) ──────────────────── */
+      [data-baseweb="popover"] {
+          min-width: 240px !important;
+          border-radius: 12px !important;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+          overflow: hidden !important;
+      }
+      [data-baseweb="popover"] [data-baseweb="menu"],
+      [data-baseweb="popover"] ul {
+          background: #001f2e !important;
+          border: 1px solid var(--border-mid) !important;
+      }
+      [data-baseweb="popover"] li,
+      [data-baseweb="popover"] [role="option"] {
+          color: var(--fg) !important;
+          padding: 12px 20px !important;
+          font-family: 'Inter', sans-serif !important;
+      }
+      [data-baseweb="popover"] li:hover {
+          background: rgba(255, 255, 255, 0.06) !important;
+          color: var(--accent) !important;
+      }
+  </style>
+  """
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
@@ -534,10 +573,10 @@ def render_risk_bar(name, score, max_score=10):
 
 def page_dashboard():
     st.markdown("""
-    <div style="text-align:center; margin-top:0; margin-bottom:20px;">
-        <h1 style="color:#111111; font-size:3rem; margin:0 0 4px 0; line-height:1.2; font-family:Georgia,'Palatino Linotype',Palatino,cursive; font-weight:bold; font-style:italic; letter-spacing:0.02em;">EmOps</h1>
-        <h2 style="color:#111111; font-size:1.4rem; margin:0 0 8px 0; font-weight:600;">Global Disaster Resilience Monitor</h2>
-        <p style="color:#555555; font-size:0.95rem;">Real-time disaster tracking, risk assessment & resilience intelligence</p>
+    <div class="hero-wrap">
+        <h1 class="hero-title animate-fade-rise">EmOps<sup style="font-size:0.35em;color:#a8aab1;vertical-align:super;margin-left:4px;">®</sup></h1>
+        <h2 class="hero-title animate-fade-rise-delay" style="font-size:clamp(1.4rem, 3.4vw, 2.6rem); margin-top:0.6rem; line-height:1.05;">Where the world&#39;s <em>disasters</em> meet <em>resilience</em>.</h2>
+        <p class="hero-sub animate-fade-rise-delay-2">Real-time disaster, mining, and rare-earth intelligence — built for analysts, responders, and decision-makers tracking how the planet moves, shakes, and rebuilds.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -600,16 +639,16 @@ def page_dashboard():
                 x=df_types["Count"], y=df_types["Type"],
                 orientation='h', marker_color=colors,
                 text=df_types["Count"], textposition="auto",
-                textfont=dict(color="#111111", family="Courier New"),
-                insidetextfont=dict(color="#111111"),
-                outsidetextfont=dict(color="#111111")
+                textfont=dict(color="#ffffff", family="Inter"),
+                insidetextfont=dict(color="#ffffff"),
+                outsidetextfont=dict(color="#ffffff")
             ))
             fig.update_layout(
-                plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-                font=dict(color="#111111", family="Courier New"), height=350,
+                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#ffffff", family="Inter"), height=350,
                 margin=dict(l=0, r=20, t=10, b=10),
-                xaxis=dict(gridcolor="#dddddd", tickfont=dict(color="#111111")),
-                yaxis=dict(gridcolor="#dddddd", tickfont=dict(color="#111111"))
+                xaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1")),
+                yaxis=dict(gridcolor="rgba(255,255,255,0.10)", tickfont=dict(color="#a8aab1"))
             )
             st.plotly_chart(fig, width="stretch")
 
@@ -781,11 +820,11 @@ def page_country_analysis():
         fig.update_layout(
             polar=dict(
                 bgcolor="#f8f9fa",
-                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#cccccc", color="#111111"),
-                angularaxis=dict(gridcolor="#cccccc", color="#111111")
+                radialaxis=dict(visible=True, range=[0, 10], gridcolor="rgba(255,255,255,0.15)", color="#a8aab1"),
+                angularaxis=dict(gridcolor="rgba(255,255,255,0.15)", color="#a8aab1")
             ),
-            plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-            font_color="#111111", font_family="Courier New", height=400,
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+            font_color="#ffffff", font_family="Inter", height=400,
             margin=dict(l=60, r=60, t=30, b=30),
             showlegend=False
         )
@@ -911,11 +950,11 @@ def page_country_analysis():
                 fig_temp.add_hline(y=40, line_dash="dash", line_color="#ff0000", annotation_text="Heat Alert (40°C)")
                 fig_temp.update_layout(
                     title="7-Day Temperature Forecast",
-                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-                    font_color="#111111", font_family="Courier New", height=300,
+                    plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                    font_color="#ffffff", font_family="Inter", height=300,
                     margin=dict(l=40, r=20, t=40, b=30),
-                    xaxis=dict(gridcolor="#dddddd"),
-                    yaxis=dict(gridcolor="#dddddd", title="°C"),
+                    xaxis=dict(gridcolor="rgba(255,255,255,0.10)"),
+                    yaxis=dict(gridcolor="rgba(255,255,255,0.10)", title="°C"),
                     legend=dict(bgcolor="rgba(255,255,255,0.8)")
                 )
                 st.plotly_chart(fig_temp, width="stretch")
@@ -927,11 +966,11 @@ def page_country_analysis():
                 ))
                 fig_precip.update_layout(
                     title="7-Day Precipitation Forecast",
-                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-                    font_color="#111111", font_family="Courier New", height=250,
+                    plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                    font_color="#ffffff", font_family="Inter", height=250,
                     margin=dict(l=40, r=20, t=40, b=30),
-                    xaxis=dict(gridcolor="#dddddd"),
-                    yaxis=dict(gridcolor="#dddddd", title="mm")
+                    xaxis=dict(gridcolor="rgba(255,255,255,0.10)"),
+                    yaxis=dict(gridcolor="rgba(255,255,255,0.10)", title="mm")
                 )
                 st.plotly_chart(fig_precip, width="stretch")
         else:
@@ -1099,9 +1138,9 @@ def page_drought_heatwave():
                 fig.add_hline(y=35, line_dash="dot", line_color="#ff8800", annotation_text="Caution: 35°C")
                 fig.update_layout(
                     title=f"7-Day Temperature Forecast — {monitor_country}",
-                    plot_bgcolor="#f8f9fa", paper_bgcolor="#ffffff",
-                    font_color="#111111", font_family="Courier New", height=350,
-                    xaxis=dict(gridcolor="#dddddd"), yaxis=dict(gridcolor="#dddddd", title="°C"),
+                    plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                    font_color="#ffffff", font_family="Inter", height=350,
+                    xaxis=dict(gridcolor="rgba(255,255,255,0.10)"), yaxis=dict(gridcolor="rgba(255,255,255,0.10)", title="°C"),
                     legend=dict(bgcolor="rgba(255,255,255,0.8)"),
                     margin=dict(l=40, r=20, t=40, b=30)
                 )
