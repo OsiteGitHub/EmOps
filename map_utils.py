@@ -267,6 +267,16 @@ def create_rotating_globe_html(events, selected_types=None, height=600):
 
     points_js = json.dumps(points)
 
+    # Pulsing rings on top severity events (max 35 for performance)
+    ring_points = []
+    for p in points[:35]:
+        ring_points.append({
+            'lat': p['lat'],
+            'lng': p['lng'],
+            'color': p['color']
+        })
+    rings_js = json.dumps(ring_points)
+
     html = f"""<!DOCTYPE html>
 <html><head>
 <meta charset="utf-8">
@@ -307,7 +317,18 @@ html,body{{width:100%;height:{height}px;overflow:hidden;background:#000010;font-
 <script src="https://unpkg.com/globe.gl@2.41.6/dist/globe.gl.min.js"></script>
 <script>
 var pointsData = {points_js};
+var ringsData = {rings_js};
 var rotating = true;
+
+function hexToRgba(hex, a) {{
+  if (!hex) return 'rgba(255,255,255,'+a+')';
+  var c = hex.replace('#','');
+  if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+  var r = parseInt(c.substr(0,2),16);
+  var g = parseInt(c.substr(2,2),16);
+  var b = parseInt(c.substr(4,2),16);
+  return 'rgba('+r+','+g+','+b+','+a+')';
+}}
 
 var countryLabels = [
   {{lat:37.1,lng:-95.7,text:"UNITED STATES",tier:"country"}},
@@ -656,16 +677,20 @@ var cityLabels = [
   {{lat:42.9,lng:74.6,text:"Bishkek",tier:"city"}},
 ];
 
-var globe = Globe({{animateIn: false, rendererConfig: {{antialias: false, precision: 'lowp'}}}})
+var globe = Globe({{animateIn: false, rendererConfig: {{antialias: true, precision: 'mediump'}}}})
   .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+  .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
   .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+  .showAtmosphere(true)
+  .atmosphereColor('#5fb8ff')
+  .atmosphereAltitude(0.22)
   .pointsData(pointsData)
   .pointLat('lat')
   .pointLng('lng')
   .pointColor('color')
   .pointRadius('radius')
   .pointAltitude('altitude')
-  .pointResolution(4)
+  .pointResolution(6)
   .pointsMerge(false)
   .pointLabel(function(d){{
     return '<div style="background:rgba(10,14,23,0.92);border:1px solid #4fc3f7;border-radius:6px;padding:5px 9px;color:#fff;font-family:Courier New;font-size:11px;max-width:200px;">' + d.label + '</div>';
@@ -674,6 +699,19 @@ var globe = Globe({{animateIn: false, rendererConfig: {{antialias: false, precis
     document.getElementById('popup-content').innerHTML = d.popup;
     document.getElementById('info-popup').style.display = 'block';
   }})
+  .ringsData(ringsData)
+  .ringLat('lat')
+  .ringLng('lng')
+  .ringColor(function(d){{ return function(t){{ return hexToRgba(d.color, 1 - t); }}; }})
+  .ringMaxRadius(5)
+  .ringPropagationSpeed(2.5)
+  .ringRepeatPeriod(1500)
+  .ringAltitude(0.005)
+  .polygonsData([])
+  .polygonAltitude(0.006)
+  .polygonCapColor(function(){{ return 'rgba(255,255,255,0)'; }})
+  .polygonSideColor(function(){{ return 'rgba(0,0,0,0)'; }})
+  .polygonStrokeColor(function(){{ return 'rgba(120,200,255,0.55)'; }})
   .labelsData(countryLabels)
   .labelLat('lat')
   .labelLng('lng')
@@ -696,6 +734,14 @@ ctrl.zoomSpeed = 1.6;
 ctrl.minDistance = 110;
 ctrl.maxDistance = 580;
 globe.pointOfView({{altitude: 2.5}}, 0);
+
+/* Load country borders for the carto-style map overlay */
+fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
+  .then(function(r){{ return r.json(); }})
+  .then(function(geo){{
+    if (geo && geo.features) {{ globe.polygonsData(geo.features); }}
+  }})
+  .catch(function(e){{ /* silent fallback - globe still works without borders */ }});
 
 var labelUpdateTimer = null;
 function updateLabels() {{
