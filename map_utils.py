@@ -81,6 +81,44 @@ def create_global_map(events, selected_types=None, height=600):
         control=False
     ).add_to(m)
 
+    popup_css = """
+    <style>
+    .leaflet-popup-content-wrapper {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 12px !important;
+    }
+    .leaflet-popup-content {
+        margin: 0 !important;
+        border-radius: 12px !important;
+    }
+    .leaflet-popup-tip-container { display: none !important; }
+    .leaflet-popup-close-button {
+        color: #a8aab1 !important;
+        font-size: 18px !important;
+        top: 6px !important;
+        right: 8px !important;
+        z-index: 10;
+    }
+    .leaflet-popup-close-button:hover { color: #ff4444 !important; }
+    .leaflet-tooltip {
+        background: rgba(0,20,40,0.92) !important;
+        border: 1px solid rgba(95,184,255,0.4) !important;
+        color: #ffffff !important;
+        border-radius: 6px !important;
+        font-size: 0.78rem !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.6) !important;
+    }
+    .leaflet-tooltip-top:before,
+    .leaflet-tooltip-bottom:before,
+    .leaflet-tooltip-left:before,
+    .leaflet-tooltip-right:before { display: none !important; }
+    </style>
+    """
+    m.get_root().html.add_child(folium.Element(popup_css))
+
     heat_data = []
     severity_order = {"Critical": 4, "High": 3, "Moderate": 2, "Low": 1}
 
@@ -97,22 +135,62 @@ def create_global_map(events, selected_types=None, height=600):
         color = DISASTER_COLORS.get(event.get("type", ""), "#ffffff")
         radius = _severity_radius(event)
 
-        popup_parts = [
-            f'<div style="font-family:Courier New,Courier,monospace;min-width:220px;">',
-            f"<h4 style='color:{color};margin:0 0 5px 0;'>{event.get('type', 'Unknown')}</h4>",
-            f"<p style='margin:2px 0;'><b>{event.get('title', '')}</b></p>",
-        ]
-        if event.get("magnitude"):
-            popup_parts.append(f"<p style='margin:2px 0;'>Magnitude: <b>{event['magnitude']}</b></p>")
-        if event.get("depth"):
-            popup_parts.append(f"<p style='margin:2px 0;'>Depth: {event['depth']:.1f} km</p>")
-        if event.get("time"):
-            popup_parts.append(f"<p style='margin:2px 0;'>Time: {event['time']}</p>")
         sev = event.get("severity", "N/A")
-        sev_colors = {"Critical": "#ff0000", "High": "#ff6600", "Moderate": "#ffaa00", "Low": "#88cc00"}
-        sev_color = sev_colors.get(sev, "#fff")
-        popup_parts.append(f"<p style='margin:2px 0;'>Severity: <span style='color:{sev_color};font-weight:bold;'>{sev}</span></p>")
-        popup_parts.append("</div>")
+        sev_colors = {"Critical": "#ff4444", "High": "#ff8800", "Moderate": "#ffcc00", "Low": "#88dd44"}
+        sev_color = sev_colors.get(sev, "#aaaaaa")
+        dtype = event.get("type", "Unknown")
+        title = event.get("title", "")
+        source = event.get("source", "")
+        country = event.get("country", "")
+
+        rows = ""
+        if event.get("magnitude"):
+            rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Magnitude</td><td style='color:#fff;font-weight:600;'>{event['magnitude']}</td></tr>"
+        if event.get("depth"):
+            rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Depth</td><td style='color:#fff;'>{event['depth']:.1f} km</td></tr>"
+        if event.get("time"):
+            t = event["time"]
+            tstr = t.strftime("%Y-%m-%d %H:%M UTC") if hasattr(t, "strftime") else str(t)[:16]
+            rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Time</td><td style='color:#fff;'>{tstr}</td></tr>"
+        if country:
+            rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Location</td><td style='color:#9be8a8;'>{country}</td></tr>"
+        rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Coords</td><td style='color:#a8aab1;font-size:0.78rem;'>{lat:.2f}°, {lon:.2f}°</td></tr>"
+        if source:
+            rows += f"<tr><td style='color:#a8aab1;padding:3px 8px 3px 0;'>Source</td><td style='color:#5fb8ff;font-size:0.78rem;'>{source}</td></tr>"
+
+        popup_html = f"""
+<div style="
+  font-family:'Inter',Arial,sans-serif;
+  background:rgba(0,20,40,0.97);
+  border:1px solid {color};
+  border-radius:12px;
+  min-width:240px;
+  max-width:300px;
+  padding:0;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.7);
+">
+  <div style="background:rgba({int(color[1:3],16)},{int(color[3:5],16)},{int(color[5:7],16)},0.18);padding:10px 14px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <span style="
+        display:inline-block;width:10px;height:10px;border-radius:50%;
+        background:{color};box-shadow:0 0 8px {color};flex-shrink:0;
+      "></span>
+      <span style="color:{color};font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">{dtype}</span>
+      <span style="
+        margin-left:auto;background:{sev_color}22;color:{sev_color};
+        border:1px solid {sev_color};border-radius:4px;
+        font-size:0.65rem;font-weight:700;padding:1px 6px;letter-spacing:0.08em;
+      ">{sev}</span>
+    </div>
+    <div style="color:#ffffff;font-size:0.84rem;font-weight:600;line-height:1.35;">{title[:90]}{"…" if len(title)>90 else ""}</div>
+  </div>
+  <div style="padding:8px 14px 10px 14px;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+      {rows}
+    </table>
+  </div>
+</div>"""
 
         folium.CircleMarker(
             location=[lat, lon],
@@ -120,10 +198,14 @@ def create_global_map(events, selected_types=None, height=600):
             color=color,
             fill=True,
             fillColor=color,
-            fillOpacity=0.6,
-            weight=1,
-            popup=folium.Popup("".join(popup_parts), max_width=300),
-            tooltip=f"{event.get('type', '')}: {event.get('title', '')}"
+            fillOpacity=0.65,
+            weight=1.5,
+            popup=folium.Popup(popup_html, max_width=320),
+            tooltip=folium.Tooltip(
+                f"<span style='font-family:Inter,Arial,sans-serif;font-size:0.8rem;'>"
+                f"<b style='color:{color};'>{dtype}</b> — {title[:55]}{'…' if len(title)>55 else ''}</span>",
+                sticky=False
+            )
         ).add_to(m)
 
         weight = 1
@@ -159,6 +241,33 @@ def create_country_map(lat, lon, events=None, zoom=5):
         control=False
     ).add_to(m)
 
+    _dark_popup_css = """
+    <style>
+    .leaflet-popup-content-wrapper {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 12px !important;
+    }
+    .leaflet-popup-content { margin: 0 !important; border-radius: 12px !important; }
+    .leaflet-popup-tip-container { display: none !important; }
+    .leaflet-popup-close-button { color: #a8aab1 !important; font-size: 18px !important; top: 6px !important; right: 8px !important; }
+    .leaflet-popup-close-button:hover { color: #ff4444 !important; }
+    .leaflet-tooltip {
+        background: rgba(0,20,40,0.92) !important;
+        border: 1px solid rgba(95,184,255,0.4) !important;
+        color: #ffffff !important;
+        border-radius: 6px !important;
+        font-size: 0.78rem !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.6) !important;
+    }
+    .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before,
+    .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { display: none !important; }
+    </style>
+    """
+    m.get_root().html.add_child(folium.Element(_dark_popup_css))
+
     if events:
         for event in events:
             elat = event.get("lat", 0)
@@ -167,13 +276,41 @@ def create_country_map(lat, lon, events=None, zoom=5):
                 continue
             color = DISASTER_COLORS.get(event.get("type", ""), "#ffffff")
             radius = _severity_radius(event)
-            popup_html = f"""
-            <div style='font-family:Courier New,Courier,monospace;'>
-                <h4 style='color:{color};margin:0;'>{event.get('type', '')}</h4>
-                <p style='margin:3px 0;'><b>{event.get('title', '')}</b></p>
-                <p style='margin:3px 0;'>Severity: {event.get('severity', 'N/A')}</p>
-            </div>
-            """
+            sev = event.get("severity", "N/A")
+            sev_colors = {"Critical": "#ff4444", "High": "#ff8800", "Moderate": "#ffcc00", "Low": "#88dd44"}
+            sev_color = sev_colors.get(sev, "#aaaaaa")
+            dtype = event.get("type", "Unknown")
+            title = event.get("title", "")
+            country = event.get("country", "")
+            source = event.get("source", "")
+
+            rows = ""
+            if event.get("magnitude"):
+                rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.76rem;'>Magnitude</td><td style='color:#fff;font-weight:600;font-size:0.76rem;'>{event['magnitude']}</td></tr>"
+            if event.get("depth"):
+                rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.76rem;'>Depth</td><td style='color:#fff;font-size:0.76rem;'>{event['depth']:.1f} km</td></tr>"
+            if event.get("time"):
+                t = event["time"]
+                tstr = t.strftime("%Y-%m-%d %H:%M UTC") if hasattr(t, "strftime") else str(t)[:16]
+                rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.76rem;'>Time</td><td style='color:#fff;font-size:0.76rem;'>{tstr}</td></tr>"
+            if country:
+                rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.76rem;'>Country</td><td style='color:#9be8a8;font-size:0.76rem;'>{country}</td></tr>"
+            rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.72rem;'>Coords</td><td style='color:#a8aab1;font-size:0.72rem;'>{elat:.2f}°, {elon:.2f}°</td></tr>"
+            if source:
+                rows += f"<tr><td style='color:#a8aab1;padding:2px 8px 2px 0;font-size:0.72rem;'>Source</td><td style='color:#5fb8ff;font-size:0.72rem;'>{source}</td></tr>"
+
+            popup_html = f"""<div style="font-family:'Inter',Arial,sans-serif;background:rgba(0,20,40,0.97);border:1px solid {color};border-radius:12px;min-width:220px;max-width:280px;padding:0;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.7);">
+  <div style="background:rgba({int(color[1:3],16)},{int(color[3:5],16)},{int(color[5:7],16)},0.18);padding:9px 13px 7px 13px;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+      <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:{color};box-shadow:0 0 7px {color};flex-shrink:0;"></span>
+      <span style="color:{color};font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">{dtype}</span>
+      <span style="margin-left:auto;background:{sev_color}22;color:{sev_color};border:1px solid {sev_color};border-radius:4px;font-size:0.62rem;font-weight:700;padding:1px 5px;">{sev}</span>
+    </div>
+    <div style="color:#fff;font-size:0.82rem;font-weight:600;line-height:1.3;">{title[:80]}{"…" if len(title)>80 else ""}</div>
+  </div>
+  <div style="padding:7px 13px 9px 13px;"><table style="width:100%;border-collapse:collapse;">{rows}</table></div>
+</div>"""
+
             folium.CircleMarker(
                 location=[elat, elon],
                 radius=radius,
@@ -181,9 +318,12 @@ def create_country_map(lat, lon, events=None, zoom=5):
                 fill=True,
                 fillColor=color,
                 fillOpacity=0.7,
-                weight=1,
-                popup=folium.Popup(popup_html, max_width=250),
-                tooltip=event.get("title", "")
+                weight=1.5,
+                popup=folium.Popup(popup_html, max_width=300),
+                tooltip=folium.Tooltip(
+                    f"<span style='font-family:Inter,Arial,sans-serif;font-size:0.78rem;'><b style='color:{color};'>{dtype}</b> — {title[:50]}{'…' if len(title)>50 else ''}</span>",
+                    sticky=False
+                )
             ).add_to(m)
 
     return m
