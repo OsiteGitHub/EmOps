@@ -678,12 +678,11 @@ var cityLabels = [
 ];
 
 var globe = Globe({{animateIn: false, rendererConfig: {{antialias: true, precision: 'mediump'}}}})
-  .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-  .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-  .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+  .backgroundColor('#04080f')
+  .showGlobe(true)
   .showAtmosphere(true)
   .atmosphereColor('#5fb8ff')
-  .atmosphereAltitude(0.22)
+  .atmosphereAltitude(0.25)
   .pointsData(pointsData)
   .pointLat('lat')
   .pointLng('lng')
@@ -708,10 +707,10 @@ var globe = Globe({{animateIn: false, rendererConfig: {{antialias: true, precisi
   .ringRepeatPeriod(1500)
   .ringAltitude(0.005)
   .polygonsData([])
-  .polygonAltitude(0.006)
-  .polygonCapColor(function(){{ return 'rgba(255,255,255,0)'; }})
-  .polygonSideColor(function(){{ return 'rgba(0,0,0,0)'; }})
-  .polygonStrokeColor(function(){{ return 'rgba(120,200,255,0.55)'; }})
+  .polygonAltitude(0.008)
+  .polygonCapColor(function(){{ return 'rgba(40,80,140,0.55)'; }})
+  .polygonSideColor(function(){{ return 'rgba(20,40,80,0.35)'; }})
+  .polygonStrokeColor(function(){{ return 'rgba(120,200,255,0.85)'; }})
   .labelsData(countryLabels)
   .labelLat('lat')
   .labelLng('lng')
@@ -734,6 +733,17 @@ ctrl.zoomSpeed = 1.6;
 ctrl.minDistance = 110;
 ctrl.maxDistance = 580;
 globe.pointOfView({{altitude: 2.5}}, 0);
+
+/* Dark navy globe material since we removed the earth texture */
+try {{
+  var mat = globe.globeMaterial();
+  if (mat) {{
+    if (mat.color && mat.color.set) mat.color.set('#0a1628');
+    if (mat.emissive && mat.emissive.set) mat.emissive.set('#050a14');
+    if ('shininess' in mat) mat.shininess = 12;
+    mat.needsUpdate = true;
+  }}
+}} catch(e) {{ /* fallback - sphere stays default */ }}
 
 /* Load country borders for the carto-style map overlay */
 fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
