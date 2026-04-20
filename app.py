@@ -200,6 +200,16 @@ CUSTOM_CSS = """
             margin: 0 !important;
             line-height: 1 !important;
         }
+        .brand-header .brand-tagline {
+            color: var(--muted) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.92rem !important;
+            font-weight: 400 !important;
+            line-height: 1.55 !important;
+            max-width: 640px;
+            margin: 0.7rem auto 0 auto !important;
+            text-align: center;
+        }
 
         /* ── Hero section ──────────────────────────────────────── */
         .hero-wrap {
@@ -641,9 +651,6 @@ def render_risk_bar(name, score, max_score=10):
 
 def page_dashboard():
     st.markdown("""
-    <div class="hero-wrap">
-        <h2 class="hero-title animate-fade-rise-delay" style="font-size:45px; margin-top:0.6rem; line-height:1.2;">Real-time <em>disaster</em>, <em>mining</em>, and <em>rare-earth</em> intelligence — built for analysts, responders, and decision-makers tracking how the planet <em>moves</em>, <em>shakes</em>, and <em>rebuilds</em>.</h2>
-    </div>
     """, unsafe_allow_html=True)
 
     with st.spinner("Loading live disaster data..."):
@@ -1671,6 +1678,7 @@ def page_mining():
 st.markdown("""
 <div class="brand-header animate-fade-rise">
     <h1 class="hero-title">EmOps<sup style="font-size:0.35em;color:#a8aab1;vertical-align:super;margin-left:4px;">&reg;</sup></h1>
+    <p class="brand-tagline">Real-time disaster, mining, and rare-earth intelligence &mdash; built for analysts, responders, and decision-makers tracking how the planet moves, shakes, and rebuilds.</p>
 </div>
 """, unsafe_allow_html=True)
 
