@@ -642,7 +642,7 @@ def render_risk_bar(name, score, max_score=10):
 def page_dashboard():
     st.markdown("""
     <div class="hero-wrap">
-        <h2 class="hero-title animate-fade-rise-delay" style="font-size:clamp(1.4rem, 3.4vw, 2.6rem); margin-top:0.6rem; line-height:1.15;">Real-time <em>disaster</em>, <em>mining</em>, and <em>rare-earth</em> intelligence — built for analysts, responders, and decision-makers tracking how the planet <em>moves</em>, <em>shakes</em>, and <em>rebuilds</em>.</h2>
+        <h2 class="hero-title animate-fade-rise-delay" style="font-size:50px !important; text-align:center; margin-top:0.6rem; line-height:1.15;">Real-time <em>disaster</em>, <em>mining</em>, and <em>rare-earth</em> intelligence — built for analysts, responders, and decision-makers tracking how the planet <em>moves</em>, <em>shakes</em>, and <em>rebuilds</em>.</h2>
     </div>
     """, unsafe_allow_html=True)
 
