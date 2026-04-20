@@ -189,8 +189,20 @@ CUSTOM_CSS = """
                       0 4px 20px rgba(0, 0, 0, 0.18);
       }
 
-      /* ── Hero section ──────────────────────────────────────── */
-      .hero-wrap {
+      /* ── Brand header (above nav) ──────────────────────────── */
+        .brand-header {
+            text-align: center;
+            padding: 1.2rem 0 0.4rem 0;
+            margin-bottom: 0.6rem;
+        }
+        .brand-header .hero-title {
+            font-size: clamp(2.6rem, 6.5vw, 5rem) !important;
+            margin: 0 !important;
+            line-height: 1 !important;
+        }
+
+        /* ── Hero section ──────────────────────────────────────── */
+        .hero-wrap {
           text-align: center;
           padding: 2.5rem 1rem 1.5rem 1rem;
           animation: fade-rise 0.9s ease-out both;
@@ -630,9 +642,7 @@ def render_risk_bar(name, score, max_score=10):
 def page_dashboard():
     st.markdown("""
     <div class="hero-wrap">
-        <h1 class="hero-title animate-fade-rise">EmOps<sup style="font-size:0.35em;color:#a8aab1;vertical-align:super;margin-left:4px;">®</sup></h1>
-        <h2 class="hero-title animate-fade-rise-delay" style="font-size:clamp(1.4rem, 3.4vw, 2.6rem); margin-top:0.6rem; line-height:1.05;">Where the world&#39;s <em>disasters</em> meet <em>resilience</em>.</h2>
-        <p class="hero-sub animate-fade-rise-delay-2">Real-time disaster, mining, and rare-earth intelligence — built for analysts, responders, and decision-makers tracking how the planet moves, shakes, and rebuilds.</p>
+        <h2 class="hero-title animate-fade-rise-delay" style="font-size:clamp(1.4rem, 3.4vw, 2.6rem); margin-top:0.6rem; line-height:1.15;">Real-time <em>disaster</em>, <em>mining</em>, and <em>rare-earth</em> intelligence — built for analysts, responders, and decision-makers tracking how the planet <em>moves</em>, <em>shakes</em>, and <em>rebuilds</em>.</h2>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1657,6 +1667,12 @@ def page_mining():
         for m in critical:
             render_mine_card(m)
 
+
+st.markdown("""
+<div class="brand-header animate-fade-rise">
+    <h1 class="hero-title">EmOps<sup style="font-size:0.35em;color:#a8aab1;vertical-align:super;margin-left:4px;">&reg;</sup></h1>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown('<div id="top-nav-anchor"></div>', unsafe_allow_html=True)
 page = st.radio(
