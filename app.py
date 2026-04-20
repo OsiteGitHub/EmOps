@@ -763,7 +763,7 @@ def page_dashboard():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#111111;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="color:#9be8a8;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
                     <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -802,7 +802,7 @@ def page_dashboard():
                     <div class="alert-type" style="color:{DISASTER_COLORS.get(d.get('type', ''), '#4488ff')};">{_safe(d.get('type', ''))}</div>
                     <div class="alert-title">{_safe(d.get('title', ''))}</div>
                     <div class="alert-time">📅 {_safe(d.get('date', ''))} | 📍 {_safe(d.get('country', ''))}{casualties_str}{displaced_str}</div>
-                    <div style="color:#111111;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
+                    <div style="color:#9be8a8;margin-top:5px;font-size:0.8rem;line-height:1.4;">{_safe(d.get('description', '')[:180])}...</div>
                     <div style="margin-top:4px;font-size:0.7rem;color:#1a66cc;">Source: {_safe(d.get('source', ''))}</div>
                 </div>
                 """, unsafe_allow_html=True)
