@@ -283,6 +283,10 @@ RARE_EARTH_MINES = [
     {"name": "Mushgai Khudag REE-Fluorite", "lat": 43.92, "lon": 104.77, "country": "Mongolia", "state": "South Gobi", "type": "Rare Earth Mine", "mineral": "REE/Fluorite/Phosphate", "status": "Active", "severity": "Moderate", "issue": "Energy Resources / LightPath Technologies; fluoride contamination of Gobi aquifer; nomadic herder water access", "source": "Mongolian Ministry of Mining / USGS"},
 ]
 
+import streamlit as st
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_mine_events():
     """Convert mine data to event format compatible with the map system."""
     events = []
@@ -303,6 +307,7 @@ def get_mine_events():
         })
     return events
 
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_rare_earth_events():
     """Convert rare earth mine data to event format compatible with the map system."""
     events = []

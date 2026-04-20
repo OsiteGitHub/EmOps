@@ -600,6 +600,10 @@ REGIONAL_EVENTS = [
 ]
 
 
+import streamlit as st
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_regional_events():
     """Return all regional supplemental events in the standard event format."""
     events = []

@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
-from streamlit_folium import st_folium
+from streamlit_folium import st_folium, folium_static
 import streamlit.components.v1 as components
 from api_clients import (
     fetch_earthquakes, fetch_nasa_events, fetch_reliefweb_disasters,
@@ -848,7 +848,7 @@ def page_dashboard():
     st.markdown(legend_html, unsafe_allow_html=True)
 
     gmap = create_global_map(all_events, selected_types=filter_types if filter_types else None, height=580)
-    st_folium(gmap, width=None, height=560, returned_objects=[])
+    folium_static(gmap, height=560)
 
     st.markdown('<div class="section-header"><h2>🚨 Latest Alerts</h2></div>', unsafe_allow_html=True)
     sev_rank = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
