@@ -196,7 +196,8 @@ CUSTOM_CSS = """
             margin-bottom: 0.6rem;
         }
         .brand-header .hero-title {
-            font-size: clamp(2.6rem, 6.5vw, 5rem) !important;
+            font-size: 80px !important;
+            font-weight: 600 !important;
             margin: 0 !important;
             line-height: 1 !important;
         }
@@ -219,12 +220,12 @@ CUSTOM_CSS = """
       }
       .hero-title {
           font-family: 'Instrument Serif', Georgia, serif !important;
-          font-size: clamp(3.5rem, 9vw, 7rem) !important;
+          font-size: 80px !important;
           line-height: 0.95 !important;
           letter-spacing: -0.04em !important;
           color: var(--fg);
           margin: 0;
-          font-weight: 400;
+          font-weight: 600;
       }
       .hero-title em {
           font-style: italic;
