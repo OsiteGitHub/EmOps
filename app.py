@@ -358,7 +358,10 @@ CUSTOM_CSS = """
       }
 
       .top-nav-wrap {
-          margin: 0 auto 22px auto !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          margin-top: 0 !important;
+          margin-bottom: 22px !important;
           padding: 10px 14px;
           background: rgba(255, 255, 255, 0.06);
           backdrop-filter: blur(14px);
@@ -366,8 +369,10 @@ CUSTOM_CSS = """
           border: 1px solid var(--border-soft);
           border-radius: 999px;
           box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 6px 24px rgba(0, 0, 0, 0.25);
-          display: table;
-          max-width: max-content;
+          display: block !important;
+          width: fit-content !important;
+          width: -moz-fit-content !important;
+          max-width: 100% !important;
       }
       .top-nav-wrap div[role="radiogroup"] {
           gap: 6px !important;
