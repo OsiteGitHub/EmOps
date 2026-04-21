@@ -346,6 +346,17 @@ CUSTOM_CSS = """
           letter-spacing: -0.01em;
       }
       /* Top navigation glass pills */
+      /* Lock the page from sliding sideways on mobile/desktop */
+      html, body {
+          overflow-x: hidden !important;
+          max-width: 100vw !important;
+      }
+      .stApp, .main, .block-container,
+      div[data-testid="stMainBlockContainer"] {
+          overflow-x: hidden !important;
+          max-width: 100vw !important;
+      }
+
       .top-nav-wrap {
           margin: 0 auto 22px auto !important;
           padding: 10px 14px;
@@ -673,6 +684,11 @@ CUSTOM_CSS = """
                 border-radius: 16px !important;
                 padding: 6px 8px !important;
                 margin: 0 0 14px 0 !important;
+                display: block !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
             }
             .top-nav-wrap div[role="radiogroup"] {
                 flex-wrap: nowrap !important;
