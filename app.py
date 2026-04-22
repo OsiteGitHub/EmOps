@@ -1494,7 +1494,7 @@ def page_drought_heatwave():
 
 def page_resources():
     st.markdown('<h1 style="color:#1a66cc;">🆘 Resource Hub</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#21ff00;">Shelters, aid organizations, evacuation guides & community resources</p>', unsafe_allow_html=True)
 
     tab_orgs, tab_shelters, tab_evac, tab_prep, tab_community, tab_report = st.tabs(["🏥 Aid Organizations", "🏠 Shelter & Water Locator", "🚨 Evacuation Guides", "🎒 Preparedness", "👥 Community", "📝 Report Disaster"])
 
