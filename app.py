@@ -1267,7 +1267,7 @@ def page_country_analysis():
 
 def page_live_alerts():
     st.markdown('<h1 style="color:#1a66cc;">🚨 Live Disaster Alerts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#21ff00;">Real-time feed from USGS, NASA EONET, and GDACS</p>', unsafe_allow_html=True)
 
     with st.spinner("Fetching live data..."):
         events = get_all_live_events()
@@ -1333,7 +1333,7 @@ def page_live_alerts():
 
 def page_drought_heatwave():
     st.markdown('<h1 style="color:#1a66cc;">🌡️ Drought & Heatwave Center</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#21ff00;">Specialized monitoring for extreme heat, drought conditions, and water stress</p>', unsafe_allow_html=True)
 
     tab_monitor, tab_help, tab_crops, tab_water = st.tabs(["🌡️ Heat Monitor", "💧 Drought Help", "🌾 Crop Advice", "🏗️ Water Harvesting"])
 
@@ -1683,7 +1683,7 @@ def page_resources():
 
 def page_mining():
     st.markdown('<h1 style="color:#1a66cc;">⛏️ Mining Disasters & Environmental Impacts</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#333333;">Global database of abandoned mines, active mining pits, and rare earth extraction sites causing environmental disasters. Sources: USGS MRDS, AML Inventories, EJAtlas, research literature.</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#21ff00;">Global database of abandoned mines, active mining pits, and rare earth extraction sites causing environmental disasters. Sources: USGS MRDS, AML Inventories, EJAtlas, research literature.</p>', unsafe_allow_html=True)
 
     tab_abandoned, tab_active, tab_ree, tab_map, tab_country = st.tabs([
         "🏚️ Abandoned Mines", "⚙️ Active Mining Pits", "💎 Rare Earth Mines", "🗺️ Mine Map", "🔍 By Country"
