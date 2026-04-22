@@ -101,14 +101,43 @@ CUSTOM_CSS = """
           color: var(--fg);
       }
 
+      /* Restore Streamlit's Material icon fonts (chevrons, expand toggles,
+         selectbox arrows, sort arrows, etc.) — the universal Inter rule above
+         would otherwise replace icon glyphs with their literal alt text. */
       .material-icons,
       .material-icons-round,
       .material-icons-outlined,
+      .material-symbols-rounded,
+      .material-symbols-outlined,
+      .material-symbols-sharp,
+      span[class*="material-symbols"],
+      span[class*="material-icons"],
+      span[class*="Material"],
+      [data-testid="stIconMaterial"],
+      [data-testid="stIconMaterial"] *,
       [data-testid="collapsedControl"] span,
-      [data-testid="collapsedControl"] svg,
       button[kind="header"] span,
-      span[class*="material"] {
-          font-family: 'Material Icons' !important;
+      [data-testid="stExpander"] svg,
+      [data-testid="stExpanderToggleIcon"],
+      [data-testid="stExpanderToggleIcon"] *,
+      [data-baseweb="select"] svg,
+      [data-baseweb="icon"],
+      [data-baseweb="icon"] * {
+          font-family: 'Material Symbols Rounded',
+                       'Material Symbols Outlined',
+                       'Material Icons Rounded',
+                       'Material Icons' !important;
+          font-weight: normal !important;
+          font-style: normal !important;
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-wrap: normal !important;
+          white-space: nowrap !important;
+          direction: ltr !important;
+          -webkit-font-feature-settings: 'liga' !important;
+          -webkit-font-smoothing: antialiased !important;
+          font-feature-settings: 'liga' !important;
       }
 
       body, .stApp {
