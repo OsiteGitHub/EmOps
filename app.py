@@ -216,7 +216,7 @@ CUSTOM_CSS = """
             line-height: 1 !important;
         }
         .brand-header .brand-tagline {
-            color: #21ff00 !important;
+            color: var(--muted) !important;
             font-family: 'Inter', sans-serif !important;
             font-size: 0.92rem !important;
             font-weight: 400 !important;
